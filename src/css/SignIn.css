@@ -21,3 +21,9 @@
     border-radius: 0 10px 10px 0;
 }
 
+#signInSection>div:first-child>div>h3{
+    font-size: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1px;
+}
+
