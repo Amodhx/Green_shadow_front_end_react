@@ -19,6 +19,7 @@
 }
 #signInSection>div:last-child {
     border-radius: 0 10px 10px 0;
+    background-color: rgba(76, 175, 80, 1);;
 }
 
 #signInSection>div:first-child>div>h3{
@@ -26,4 +27,6 @@
     margin-top: 1rem;
     margin-bottom: 1px;
 }
-
+#submitBtn{
+    background-color: rgba(76, 175, 80, 1);;
+}
