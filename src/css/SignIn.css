@@ -1,0 +1,23 @@
+#loginForm{
+    width: 100vw;
+    height: 100vh;
+}
+
+#signInSection{
+    width: 55vw;
+    height: 80vh;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+}
+#signInSection div {
+    width: 100%;
+}
+#signInSection>div:first-child {
+    border-radius: 10px 0 0 10px;
+}
+#signInSection>div:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
