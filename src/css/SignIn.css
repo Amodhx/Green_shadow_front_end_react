@@ -30,3 +30,19 @@
 #submitBtn{
     background-color: rgba(76, 175, 80, 1);;
 }
+#signInSection>div:last-child>div>h3{
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 5px;
+}
+#signInSection>div:last-child>div>p{
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+#signInSection>div:last-child>div>button{
+    border: 1px solid whitesmoke;
+    padding: 5px;
+    border-radius: 5px;
+}
+

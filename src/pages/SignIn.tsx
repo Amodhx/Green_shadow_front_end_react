@@ -31,8 +31,16 @@ function SignIn(){
 
 
                     </div>
-                    <div>
-
+                    <div className='grid place-items-center'>
+                        <div className='place-items-center'>
+                            <h3>Green shadow (PVT) Ltd.</h3>
+                            <p>We are more than just a company</p>
+                            <button className="btn btn-block"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#forgotPasswordModal">
+                                Forgot Password
+                            </button>
+                        </div>
                     </div>
                 </div>
             </section>
