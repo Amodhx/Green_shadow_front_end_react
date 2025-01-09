@@ -5,7 +5,7 @@ import {useState} from "react";
 
 function Sidebar(){
     const navigate = useNavigate();
-    const [isDashBoardActive, setDashBoardActive] = useState(false);
+    const [isDashBoardActive, setDashBoardActive] = useState(true);
     const [isStaffActive, setStaffActive] = useState(false);
     const [isFieldsActive, setFieldsActive] = useState(false);
     const [isCropsActive, setCropsActive] = useState(false);
@@ -24,22 +24,27 @@ function Sidebar(){
         setStaffActive(true)
     }
     function fieldsBtnClick(){
+        navigate("/window/fields")
         deActiveAllButtons()
         setFieldsActive(true)
     }
     function cropsBtnClick(){
+        navigate("/window/crops")
         deActiveAllButtons()
         setCropsActive(true)
     }
     function equipmentBtnClick(){
+        navigate("/window/equipments")
         deActiveAllButtons()
         setEquipmentsActive(true)
     }
     function vehicleBtnClick(){
+        navigate("/window/vehicles")
         deActiveAllButtons()
         setVehiclesActive(true)
     }
     function logsBtnClick(){
+        navigate("/window/logs")
         deActiveAllButtons()
         setLogsActive(true)
     }
