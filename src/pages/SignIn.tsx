@@ -5,7 +5,7 @@ import {useNavigate} from "react-router";
 function SignIn(){
     const navigate = useNavigate();
     function signInBtnClick(){
-        navigate("/dashboard");
+        navigate("/window");
     }
     return(
         <>

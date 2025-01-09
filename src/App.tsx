@@ -3,6 +3,7 @@ import SignIn from "./pages/SignIn.tsx";
 import {createBrowserRouter, RouterProvider} from "react-router";
 import RootLayout from "./components/RootLayout.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
+import Staff from "./pages/Staff.tsx";
 
 function App() {
 
@@ -12,11 +13,12 @@ function App() {
             element : <SignIn/>,
         },
         {
-            path: '/dashboard',
+            path: '/window',
             element : <RootLayout/>,
             children : [
                 {path : '' , element : <Dashboard/>},
-                // {path : '/customers', element : <Customer/>},
+                {path : 'dashboard' , element : <Dashboard/>},
+                {path : 'staff', element : <Staff/>},
                 // {path : '/items', element : <Items/>}
             ]
         }
