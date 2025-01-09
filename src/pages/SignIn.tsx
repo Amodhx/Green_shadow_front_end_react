@@ -1,9 +1,11 @@
 import "../css/SignIn.css"
 import greenShadowLogo from '../assets/Green-shadow-logo.png';
+import {useNavigate} from "react-router";
 
 function SignIn(){
+    const navigate = useNavigate();
     function signInBtnClick(){
-
+        navigate("/dashboard");
     }
     return(
         <>
