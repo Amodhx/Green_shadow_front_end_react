@@ -9,7 +9,7 @@ function RootLayout(){
                 <div className="w-[100px]">
                     <SideBar/>
                 </div>
-                <div className="flex-1 bg-white overflow-x-hidden overflow-y-hidden">
+                <div className="flex-1 bg-white overflow-x-hidden overflow-y-auto">
                     <div className="w-full h-12 bg-white flex items-center justify-center">
                         <Header/>
                     </div>
