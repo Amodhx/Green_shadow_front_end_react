@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import VehicleModel from "../../model/VehicleModel.ts";
 import {useDispatch} from "react-redux";
-import {addVehicle} from "../../slices/VehicleSlice.ts";
+import {addVehicle,updateVehicle} from "../../slices/VehicleSlice.ts";
 
 function Vehicle({
                      closeModal,
@@ -37,17 +37,13 @@ function Vehicle({
     }, [selectedVehicle]);
 
     function submitBtnClick(){
+        const vehicle_modal = new VehicleModel('1', licence_plate_number, vehicle_category, vehicle_fuel_type, vehicle_status, staff_id, remarks)
         if (selectedVehicle){
-            console.log("Update Vehicle Details")
-            closeModal()
-
-
+            dispatch(updateVehicle(vehicle_modal.toPlainObject()));
         }else {
-            console.log("Save Vehicle Detaisl")
-            const vehicle_modal = new VehicleModel('1', licence_plate_number, vehicle_category, vehicle_fuel_type, vehicle_status, staff_id, remarks)
             dispatch(addVehicle(vehicle_modal.toPlainObject()));
-            closeModal()
         }
+        closeModal()
     }
 
     const handleOutsideClick = (e: React.MouseEvent) => {

@@ -8,9 +8,15 @@ const vehicleSlice = createSlice({
     initialState : initialVehicles,
     reducers :{
         addVehicle: (state, action) => {
-            state.push(action.payload); // Update the name in state with the dispatched payload
+            state.push(action.payload);
+        },
+        updateVehicle : (state, action) =>{
+            const index = state.findIndex(vehicle => vehicle.vehicle_id === action.payload.vehicle_id);
+            if (index !== -1) {
+                state[index] = { ...state[index], ...action.payload };
+            }
         }
     }
 })
-export const { addVehicle } = vehicleSlice.actions;
+export const { addVehicle,updateVehicle } = vehicleSlice.actions;
 export default vehicleSlice.reducer;
