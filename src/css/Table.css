@@ -1,0 +1,12 @@
+.table-container {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    max-height: 67%;
+    top: 20px;
+    position: relative;
+}
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
