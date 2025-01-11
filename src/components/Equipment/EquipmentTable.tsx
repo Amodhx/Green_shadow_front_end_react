@@ -1,5 +1,4 @@
-import '../../css/Table.css'
-function StaffTable(){
+function EquipmentTable(){
     return(
         <>
             <div className="table-container container mx-auto p-4 rounded-lg overflow-hidden">
@@ -54,4 +53,4 @@ function StaffTable(){
     )
 }
 
-export default StaffTable
+export default EquipmentTable

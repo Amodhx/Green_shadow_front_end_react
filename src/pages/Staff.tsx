@@ -10,6 +10,11 @@ function Staff(){
                         id="staff"
                         className="mt-4 block w-40 h-10 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-gray-700">
                         <option>All Staff</option>
+                        <option>All Staff</option>
+                        <option>All Staff</option>
+                        <option>All Staff</option>
+                        <option>All Staff</option>
+                        <option>All Staff</option>
                     </select>
                 </div>
                 <button
@@ -17,10 +22,7 @@ function Staff(){
                     Add New Staff
                 </button>
             </div>
-
             <StaffTable/>
-
-
         </>
     )
 }
