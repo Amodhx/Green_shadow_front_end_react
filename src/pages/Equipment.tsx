@@ -1,6 +1,13 @@
 import EquipmentTable from "../components/Equipment/EquipmentTable.tsx";
+import {useState} from "react";
+import EquipmentModal from "../components/Equipment/EquipmentModal.tsx";
+import AddNewButton from "../components/AddNewButton.tsx";
 
 function Equipment() {
+
+    const [isModalShow, setIsModalShow] = useState(false)
+    const openModal = () => setIsModalShow(true);
+    const closeModal = () => setIsModalShow(false);
     return(
         <>
             <div className="flex items-center justify-between w-full h-16 bg-gray-50 p-4 mt-12">
@@ -16,12 +23,12 @@ function Equipment() {
                         <option>All Equipment</option>
                     </select>
                 </div>
-                <button
-                    className="mt-8 h-10 px-4 bg-green-600 text-white rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                    Add New Equipment
-                </button>
+                <AddNewButton openModal={openModal} text={'Add New Equipment'}/>
             </div>
             <EquipmentTable/>
+            {isModalShow && (
+                <EquipmentModal closeModal={closeModal}/>
+            )}
         </>
     )
 }
