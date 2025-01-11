@@ -1,9 +1,20 @@
 import {useSelector} from "react-redux";
 import VehicleModel from "../../model/VehicleModel.ts";
+import {useState} from "react";
+import VehicleModal from "./VehicleModal.tsx";
 
 function VehicleTable(){
     const vehicles : VehicleModel[] = useSelector((state:any) => state.vehicles)
-    console.log(vehicles)
+    const [selectedVehicle, setSelectedVehicle] = useState<VehicleModel | null>(null);
+    function updateVehicleDetails(vehicleId:string){
+        const vehicle = vehicles.find((v: VehicleModel) => v.vehicle_id === vehicleId);
+        if (vehicle){
+            setSelectedVehicle(vehicle)
+        }
+    }
+    function closeModal() {
+        setSelectedVehicle(null);
+    }
     return(
         <>
             <div className="table-container container mx-auto p-4 rounded-lg overflow-hidden">
@@ -32,7 +43,9 @@ function VehicleTable(){
                             <td className="p-2">{vehicle.staff_id}</td>
                             <td className="p-2">{vehicle.remarks}</td>
                             <td className="p-2">
-                                <button className="bg-blue-500 text-white px-2 py-1 hover:bg-blue-600 rounded">Edit</button>
+                                <button onClick={()=>{
+                                    updateVehicleDetails(vehicle.vehicle_id)
+                                }} className="bg-blue-500 text-white px-2 py-1 hover:bg-blue-600 rounded">Edit</button>
                             </td>
                             <td className="p-2">
                                 <button className="bg-red-500 text-white px-2 py-1 hover:bg-red-600 rounded">Delete</button>
@@ -42,6 +55,12 @@ function VehicleTable(){
                     </tbody>
                 </table>
             </div>
+            {selectedVehicle && (
+                <VehicleModal
+                    closeModal={closeModal}
+                    selectedVehicle={selectedVehicle} // Pass the selected vehicle
+                />
+            )}
         </>
     )
 }

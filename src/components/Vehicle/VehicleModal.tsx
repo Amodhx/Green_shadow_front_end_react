@@ -1,9 +1,15 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import VehicleModel from "../../model/VehicleModel.ts";
 import {useDispatch} from "react-redux";
 import {addVehicle} from "../../slices/VehicleSlice.ts";
 
-function Vehicle({ closeModal }: { closeModal: () => void }) {
+function Vehicle({
+                     closeModal,
+                     selectedVehicle,
+                 }: {
+    closeModal: () => void;
+    selectedVehicle?: VehicleModel | null;
+}) {
     const [fuelTypes] = useState(['Select Vehicle Fuel Type','PETROL', 'DIESEL']);
     const [vehicleStatuses] = useState(['Select Vehicle Status','AVAILABLE', 'OUT_OF_SERVICE']);
     const [staffIdToSelectOwner] = useState(['Select Staff Id'])
@@ -14,13 +20,34 @@ function Vehicle({ closeModal }: { closeModal: () => void }) {
     const [vehicle_status,set_vehicle_status] = useState('')
     const [staff_id,set_staff_id] = useState('')
     const [remarks,set_remarks] = useState('')
+    const [buttonText,setButtonText] = useState('Save Vehicle')
 
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        if (selectedVehicle) {
+            setButtonText('Update Vehicle')
+            set_licence_plate_number(selectedVehicle.licence_plate_number || '');
+            set_vehicle_category(selectedVehicle.vehicle_category || '');
+            set_vehicle_fuel_type(selectedVehicle.fuel_type || '');
+            set_vehicle_status(selectedVehicle.status || '');
+            set_staff_id(selectedVehicle.staff_id || '');
+            set_remarks(selectedVehicle.remarks || '');
+        }
+    }, [selectedVehicle]);
+
     function submitBtnClick(){
-        const vehicle_modal = new VehicleModel('1',licence_plate_number,vehicle_category,vehicle_fuel_type,vehicle_status,staff_id,remarks)
-        dispatch(addVehicle(vehicle_modal.toPlainObject()));
-        closeModal()
+        if (selectedVehicle){
+            console.log("Update Vehicle Details")
+            closeModal()
+
+
+        }else {
+            console.log("Save Vehicle Detaisl")
+            const vehicle_modal = new VehicleModel('1', licence_plate_number, vehicle_category, vehicle_fuel_type, vehicle_status, staff_id, remarks)
+            dispatch(addVehicle(vehicle_modal.toPlainObject()));
+            closeModal()
+        }
     }
 
     const handleOutsideClick = (e: React.MouseEvent) => {
@@ -39,7 +66,7 @@ function Vehicle({ closeModal }: { closeModal: () => void }) {
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content bg-gray-800 text-white p-5 rounded-lg shadow-lg">
                         <div className="modal-header flex justify-between">
-                            <h5 className="text-xl pb-6 modal-title">Add New Vehicle Details</h5>
+                            <h5 className="text-xl pb-6 modal-title">{selectedVehicle ? 'Edit Vehicle Details' : 'Add New Vehicle Details'}</h5>
                             <button
                                 onClick={closeModal}
                                 className="btn-close text-white"
@@ -59,9 +86,9 @@ function Vehicle({ closeModal }: { closeModal: () => void }) {
                                                 set_licence_plate_number(e.target.value);
                                             }}
                                             type="text"
+                                            value={licence_plate_number}
                                             className="text-black mt-2 mb-2 form-control p-2 rounded-md w-full"
                                             placeholder="Vehicle licence plate number"
-                                            id="licencePlateNumber"
                                             required
                                         />
                                     </div>
@@ -75,6 +102,7 @@ function Vehicle({ closeModal }: { closeModal: () => void }) {
                                                 set_vehicle_category(e.target.value)
                                             }}
                                             type="text"
+                                            value={vehicle_category}
                                             className="text-black mt-2 mb-2 form-control p-2 rounded-md w-full"
                                             placeholder="Vehicle Category"
                                             id="vehicleCategory"
@@ -89,6 +117,7 @@ function Vehicle({ closeModal }: { closeModal: () => void }) {
                                             Vehicle Fuel Type
                                         </label>
                                         <select
+                                            value={vehicle_fuel_type}
                                             onChange={(e) =>{
                                                 set_vehicle_fuel_type(e.target.value)
                                             }}
@@ -106,6 +135,7 @@ function Vehicle({ closeModal }: { closeModal: () => void }) {
                                             Vehicle Status
                                         </label>
                                         <select
+                                            value={vehicle_status}
                                             onChange={(e) =>{
                                                 set_vehicle_status(e.target.value)
                                             }}
@@ -127,6 +157,7 @@ function Vehicle({ closeModal }: { closeModal: () => void }) {
                                             Owner Of the vehicle
                                         </label>
                                         <select
+                                            value={staff_id}
                                             onChange={(e) =>{
                                                 set_staff_id(e.target.value)
                                             }}
@@ -145,6 +176,7 @@ function Vehicle({ closeModal }: { closeModal: () => void }) {
                                             Any Special Remark
                                         </label>
                                         <input
+                                            value={remarks}
                                             onChange={(e)=>{
                                                 set_remarks(e.target.value)
                                             }}
@@ -173,7 +205,7 @@ function Vehicle({ closeModal }: { closeModal: () => void }) {
                                 type="submit"
                                 className="p-2 rounded btn btn-success bg-green-500 hover:bg-green-600 text-white"
                             >
-                                Save Vehicle
+                                {buttonText}
                             </button>
                         </div>
                     </div>
