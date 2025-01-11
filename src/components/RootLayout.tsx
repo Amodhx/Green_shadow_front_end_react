@@ -13,7 +13,7 @@ function RootLayout(){
                     <div className="w-full h-12 bg-white flex items-center justify-center">
                         <Header/>
                     </div>
-                    <div className="mt-2 mx-4">
+                    <div className="mt-2 mx-4 overflow-hidden">
                         <Outlet/>
                     </div>
                 </div>
