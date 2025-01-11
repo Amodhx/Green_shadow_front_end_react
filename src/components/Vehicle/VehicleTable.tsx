@@ -1,15 +1,42 @@
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import VehicleModel from "../../model/VehicleModel.ts";
 import {useState} from "react";
 import VehicleModal from "./VehicleModal.tsx";
+import {deleteVehicle} from "../../slices/VehicleSlice.ts";
+import Swal from 'sweetalert2';
+
 
 function VehicleTable(){
+    const dispatch = useDispatch();
     const vehicles : VehicleModel[] = useSelector((state:any) => state.vehicles)
     const [selectedVehicle, setSelectedVehicle] = useState<VehicleModel | null>(null);
     function updateVehicleDetails(vehicleId:string){
         const vehicle = vehicles.find((v: VehicleModel) => v.vehicle_id === vehicleId);
         if (vehicle){
             setSelectedVehicle(vehicle)
+        }
+    }
+    function deleteVehicleDetails(vehicle_id:string){
+        const vehicle = vehicles.find((v:VehicleModel) => v.vehicle_id === vehicle_id);
+        if (vehicle){
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    dispatch(deleteVehicle(vehicle))
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success"
+                    });
+                }
+            });
         }
     }
     function closeModal() {
@@ -48,7 +75,11 @@ function VehicleTable(){
                                 }} className="bg-blue-500 text-white px-2 py-1 hover:bg-blue-600 rounded">Edit</button>
                             </td>
                             <td className="p-2">
-                                <button className="bg-red-500 text-white px-2 py-1 hover:bg-red-600 rounded">Delete</button>
+                                <button
+                                    onClick={()=>{
+                                        deleteVehicleDetails(vehicle.vehicle_id);
+                                    }}
+                                    className="bg-red-500 text-white px-2 py-1 hover:bg-red-600 rounded">Delete</button>
                             </td>
                         </tr>
                     ))}

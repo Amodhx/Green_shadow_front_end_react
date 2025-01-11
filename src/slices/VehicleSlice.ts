@@ -15,8 +15,11 @@ const vehicleSlice = createSlice({
             if (index !== -1) {
                 state[index] = { ...state[index], ...action.payload };
             }
+        },
+        deleteVehicle : (state , action) =>{
+            return state.filter(vehicle => vehicle.vehicle_id !== action.payload.vehicle_id);
         }
     }
 })
-export const { addVehicle,updateVehicle } = vehicleSlice.actions;
+export const { addVehicle,updateVehicle,deleteVehicle } = vehicleSlice.actions;
 export default vehicleSlice.reducer;
