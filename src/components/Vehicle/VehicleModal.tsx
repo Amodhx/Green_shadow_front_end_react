@@ -1,4 +1,4 @@
-import {useState} from "react";
+import React, {useState} from "react";
 
 function Vehicle({ closeModal }: { closeModal: () => void }) {
     const [fuelTypes] = useState(['Select Vehicle Fuel Type','PETROL', 'DIESEL']);
