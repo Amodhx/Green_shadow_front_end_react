@@ -1,4 +1,4 @@
-import StaffTable from "../components/Staff Page/StaffTable.tsx";
+import EquipmentTable from "../components/Equipment/EquipmentTable.tsx";
 
 function Equipment() {
     return(
@@ -21,7 +21,7 @@ function Equipment() {
                     Add New Equipment
                 </button>
             </div>
-            <StaffTable/>
+            <EquipmentTable/>
         </>
     )
 }
