@@ -1,6 +1,7 @@
 import VehicleTable from "../components/Vehicle/VehicleTable.tsx";
 import {useState} from "react";
 import VehicleModal from "../components/Vehicle/VehicleModal.tsx";
+import AddNewButton from "../components/AddNewButton.tsx";
 
 function Vehicle(){
     const [isModalShow, setIsModalShow] = useState(false)
@@ -21,11 +22,7 @@ function Vehicle(){
                         <option>All Vehicle</option>
                     </select>
                 </div>
-                <button
-                    onClick={openModal}
-                    className="mt-8 h-10 px-4 bg-green-600 text-white rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                    Add New Vehicle
-                </button>
+                <AddNewButton openModal={openModal} text={'Add New Vehicle'}/>
             </div>
             <VehicleTable/>
             {isModalShow && (
