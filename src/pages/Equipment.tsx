@@ -7,7 +7,7 @@ function Equipment() {
                 <div>
                     <h1 className="block text-xl font-semibold text-gray-700">Equipment Details</h1>
                     <select
-                        id="staff"
+                        id="equipment"
                         className="mt-4 block w-40 h-10 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-gray-700">
                         <option>All Equipment</option>
                         <option>All Equipment</option>
