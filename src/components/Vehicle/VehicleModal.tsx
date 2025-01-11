@@ -1,15 +1,34 @@
 import React, {useState} from "react";
+import VehicleModel from "../../model/VehicleModel.ts";
+import {useDispatch} from "react-redux";
+import {addVehicle} from "../../slices/VehicleSlice.ts";
 
 function Vehicle({ closeModal }: { closeModal: () => void }) {
     const [fuelTypes] = useState(['Select Vehicle Fuel Type','PETROL', 'DIESEL']);
     const [vehicleStatuses] = useState(['Select Vehicle Status','AVAILABLE', 'OUT_OF_SERVICE']);
     const [staffIdToSelectOwner] = useState(['Select Staff Id'])
 
+    const [licence_plate_number,set_licence_plate_number] = useState('')
+    const [vehicle_category,set_vehicle_category] = useState('')
+    const [vehicle_fuel_type,set_vehicle_fuel_type] = useState('')
+    const [vehicle_status,set_vehicle_status] = useState('')
+    const [staff_id,set_staff_id] = useState('')
+    const [remarks,set_remarks] = useState('')
+
+    const dispatch = useDispatch();
+
+    function submitBtnClick(){
+        const vehicle_modal = new VehicleModel('1',licence_plate_number,vehicle_category,vehicle_fuel_type,vehicle_status,staff_id,remarks)
+        dispatch(addVehicle(vehicle_modal.toPlainObject()));
+        closeModal()
+    }
+
     const handleOutsideClick = (e: React.MouseEvent) => {
         if (e.target === e.currentTarget) {
             closeModal();
         }
     };
+
 
     return (
         <>
@@ -36,6 +55,9 @@ function Vehicle({ closeModal }: { closeModal: () => void }) {
                                             Vehicle licence plate number
                                         </label>
                                         <input
+                                            onChange={(e) =>{
+                                                set_licence_plate_number(e.target.value);
+                                            }}
                                             type="text"
                                             className="text-black mt-2 mb-2 form-control p-2 rounded-md w-full"
                                             placeholder="Vehicle licence plate number"
@@ -49,6 +71,9 @@ function Vehicle({ closeModal }: { closeModal: () => void }) {
                                             Vehicle Category
                                         </label>
                                         <input
+                                            onChange={(e) =>{
+                                                set_vehicle_category(e.target.value)
+                                            }}
                                             type="text"
                                             className="text-black mt-2 mb-2 form-control p-2 rounded-md w-full"
                                             placeholder="Vehicle Category"
@@ -63,7 +88,11 @@ function Vehicle({ closeModal }: { closeModal: () => void }) {
                                         <label htmlFor="vehicleFuelType" className="form-label">
                                             Vehicle Fuel Type
                                         </label>
-                                        <select className="text-gray-500 mt-2 mb-2 form-control p-2 rounded-md w-full" id="vehicleFuelType"
+                                        <select
+                                            onChange={(e) =>{
+                                                set_vehicle_fuel_type(e.target.value)
+                                            }}
+                                            className="text-gray-500 mt-2 mb-2 form-control p-2 rounded-md w-full" id="vehicleFuelType"
                                                 required>
                                             {fuelTypes.map((fuelType) => (
                                                 <option key={fuelType} value={fuelType}>
@@ -76,7 +105,11 @@ function Vehicle({ closeModal }: { closeModal: () => void }) {
                                         <label htmlFor="vehicleStatus" className="form-label">
                                             Vehicle Status
                                         </label>
-                                        <select className="mt-2 mb-2 form-control p-2 rounded-md w-full text-gray-500" id="vehicleStatus"
+                                        <select
+                                            onChange={(e) =>{
+                                                set_vehicle_status(e.target.value)
+                                            }}
+                                            className="mt-2 mb-2 form-control p-2 rounded-md w-full text-gray-500" id="vehicleStatus"
                                                 required>
                                             {vehicleStatuses.map((vehicleStatus) => (
                                                 <option key={vehicleStatus} value={vehicleStatus}>
@@ -93,7 +126,11 @@ function Vehicle({ closeModal }: { closeModal: () => void }) {
                                         <label htmlFor="staffIdToVehicle" className="form-label">
                                             Owner Of the vehicle
                                         </label>
-                                        <select className="text-gray-500 mt-2 mb-2 form-control p-2 rounded-md w-full" id="staffIdToVehicle"
+                                        <select
+                                            onChange={(e) =>{
+                                                set_staff_id(e.target.value)
+                                            }}
+                                            className="text-gray-500 mt-2 mb-2 form-control p-2 rounded-md w-full" id="staffIdToVehicle"
                                                 required>
                                             {staffIdToSelectOwner.map((staffId) => (
                                                 <option key={staffId} value={staffId}>
@@ -108,6 +145,9 @@ function Vehicle({ closeModal }: { closeModal: () => void }) {
                                             Any Special Remark
                                         </label>
                                         <input
+                                            onChange={(e)=>{
+                                                set_remarks(e.target.value)
+                                            }}
                                             type="text"
                                             className="text-black mt-2 mb-2 form-control p-2 rounded-md w-full"
                                             placeholder="Any Special Remark"
@@ -128,7 +168,7 @@ function Vehicle({ closeModal }: { closeModal: () => void }) {
                                 Close
                             </button>
                             <button
-                                onClick={closeModal}
+                                onClick={submitBtnClick}
                                 id="btnSaveVehicleDetails"
                                 type="submit"
                                 className="p-2 rounded btn btn-success bg-green-500 hover:bg-green-600 text-white"

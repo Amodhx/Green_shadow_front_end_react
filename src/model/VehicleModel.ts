@@ -17,5 +17,15 @@ class VehicleModel{
         this.staff_id = staff_id;
         this.remarks = remarks;
     }
+    toPlainObject() {
+        return {
+            vehicle_id: this.vehicle_id,
+            licence_plate_number: this.licence_plate_number,
+            vehicle_category: this.vehicle_category,
+            fuel_type: this.fuel_type,
+            status: this.status,
+            remarks : this.remarks
+        };
+    }
 }
 export default VehicleModel

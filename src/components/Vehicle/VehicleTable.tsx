@@ -1,4 +1,9 @@
+import {useSelector} from "react-redux";
+import VehicleModel from "../../model/VehicleModel.ts";
+
 function VehicleTable(){
+    const vehicles : VehicleModel[] = useSelector((state:any) => state.vehicles)
+    console.log(vehicles)
     return(
         <>
             <div className="table-container container mx-auto p-4 rounded-lg overflow-hidden">
@@ -17,21 +22,23 @@ function VehicleTable(){
                     </tr>
                     </thead>
                     <tbody>
-                    <tr className="hover:bg-green-100">
-                        <td className="p-2">1</td>
-                        <td className="p-2">John</td>
-                        <td className="p-2">Doe</td>
-                        <td className="p-2">Manager</td>
-                        <td className="p-2">Male</td>
-                        <td className="p-2">2022-01-10</td>
-                        <td className="p-2">1990-06-15</td>
-                        <td className="p-2">
-                            <button className="bg-blue-500 text-white px-2 py-1 hover:bg-blue-600 rounded">Edit</button>
-                        </td>
-                        <td className="p-2">
-                            <button className="bg-red-500 text-white px-2 py-1 hover:bg-red-600 rounded">Delete</button>
-                        </td>
-                    </tr>
+                    {vehicles.map((vehicle :VehicleModel) => (
+                        <tr key={vehicle.vehicle_id} className="hover:bg-green-100">
+                            <td className="p-2">{vehicle.vehicle_id}</td>
+                            <td className="p-2">{vehicle.licence_plate_number}</td>
+                            <td className="p-2">{vehicle.vehicle_category}</td>
+                            <td className="p-2">{vehicle.fuel_type}</td>
+                            <td className="p-2">{vehicle.status}</td>
+                            <td className="p-2">{vehicle.staff_id}</td>
+                            <td className="p-2">{vehicle.remarks}</td>
+                            <td className="p-2">
+                                <button className="bg-blue-500 text-white px-2 py-1 hover:bg-blue-600 rounded">Edit</button>
+                            </td>
+                            <td className="p-2">
+                                <button className="bg-red-500 text-white px-2 py-1 hover:bg-red-600 rounded">Delete</button>
+                            </td>
+                        </tr>
+                    ))}
                     </tbody>
                 </table>
             </div>
