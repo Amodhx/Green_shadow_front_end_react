@@ -1,11 +1,14 @@
 import EquipmentModel from "../../model/EquipmentModel.ts";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useState} from "react";
 import EquipmentModal from "./EquipmentModal.tsx";
+import {deleteEquipment} from "../../slices/EquipmentSlice.ts";
+import Swal from "sweetalert2";
 
 function EquipmentTable(){
     const equipments : EquipmentModel[] = useSelector((state : any) => state.equipments);
     const [selectedEquipment, setSelectedEquipment] = useState<EquipmentModel | null>(null);
+    const dispatch = useDispatch();
 
     function updateEquipmentDetail(equipmentId:string){
         const equipment = equipments.find((v:EquipmentModel) => v.equipment_id === equipmentId);
@@ -13,6 +16,29 @@ function EquipmentTable(){
             setSelectedEquipment(equipment);
         }
 
+    }
+    function deleteEquipmentDetail(equipmentId :string){
+        const equipment = equipments.find(equipment => equipment.equipment_id === equipmentId);
+        if (equipment){
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    dispatch(deleteEquipment(equipment))
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success"
+                    });
+                }
+            });
+        }
     }
     function closeModal(){
         setSelectedEquipment(null);
@@ -53,7 +79,11 @@ function EquipmentTable(){
                                 </button>
                             </td>
                             <td className="p-2">
-                                <button className="bg-red-500 text-white px-2 py-1 hover:bg-red-600 rounded">Delete
+                                <button
+                                    onClick={() =>{
+                                        deleteEquipmentDetail(equipment.equipment_id);
+                                    }}
+                                    className="bg-red-500 text-white px-2 py-1 hover:bg-red-600 rounded">Delete
                                 </button>
                             </td>
                         </tr>
