@@ -17,7 +17,7 @@ const staffSlice = createSlice({
             }
         },
         deleteStaff: (state, action) => {
-            state.filter(staff => staff.staff_id !== action.payload.staff_id);
+            return state.filter(staff => staff.staff_id !== action.payload.staff_id);
         }
     }
 })
