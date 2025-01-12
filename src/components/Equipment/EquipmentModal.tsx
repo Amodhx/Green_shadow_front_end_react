@@ -1,5 +1,8 @@
 import React, {useEffect, useState} from "react";
 import EquipmentModel from "../../model/EquipmentModel.ts";
+import {useDispatch} from "react-redux";
+import {addEquipment} from "../../slices/EquipmentSlice.ts";
+import Swal from "sweetalert2";
 
 function EquipmentModal({
                             closeModal,
@@ -8,6 +11,7 @@ function EquipmentModal({
     closeModal: () => void;
     selectedEquipment?: EquipmentModel | null;
 }){
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setStaffIds([...staffIds,'S001','S002'])
@@ -31,9 +35,24 @@ function EquipmentModal({
         }
     }, [selectedEquipment]);
     function submitBtnClick(){
-
+        const equipmentModel = new EquipmentModel('1',equipment_name,equipment_type,equipment_count,equipment_status,additionalStaff,additionalFields);
+        if (selectedEquipment){
+        //     Update equipment
+        }else {
+            dispatch(addEquipment(equipmentModel.toPlainObject()));
+            Swal.fire({
+                title: "Saved!",
+                icon: "success",
+                draggable: true
+            });
+        }
+        closeModal()
     }
 
+    const  [equipment_name,set_equipment_name] = useState('')
+    const [equipment_type,set_equipment_type] = useState('')
+    const [equipment_count,set_equipment_count] = useState('')
+    const [equipment_status,set_equipment_status] = useState('')
     const [additionalStaff, setAdditionalStaff] = useState<string[]>([]);
     const [additionalFields, setAdditionalFields] = useState<string[]>([]);
 
@@ -83,6 +102,10 @@ function EquipmentModal({
                                             Equipment Name
                                         </label>
                                         <input
+                                            onChange={(e) =>{
+                                                set_equipment_name(e.target.value)
+                                            }}
+                                            value={equipment_name}
                                             type="text"
                                             className="text-black mt-2 mb-2 form-control p-2 rounded-md w-full"
                                             placeholder="Enter Equipment Name"
@@ -95,6 +118,10 @@ function EquipmentModal({
                                             Equipment Type
                                         </label>
                                         <select
+                                            onChange={(e)=>{
+                                                set_equipment_type(e.target.value)
+                                            }}
+                                            value={equipment_type}
                                             className="text-gray-500 mt-2 mb-2 form-control p-2 rounded-md w-full"
                                             id="vehicleFuelType"
                                             required>
@@ -112,6 +139,10 @@ function EquipmentModal({
                                         Equipment Count
                                         </label>
                                         <input
+                                            onChange={(e)=>{
+                                                set_equipment_count(e.target.value)
+                                            }}
+                                            value={equipment_count}
                                             type="text"
                                             className="text-black mt-2 mb-2 form-control p-2 rounded-md w-full"
                                             placeholder="Enter Equipment Count"
@@ -124,8 +155,12 @@ function EquipmentModal({
                                             Equipment Status
                                         </label>
                                         <select
+                                            onChange={(e)=>{
+                                                set_equipment_status(e.target.value)
+                                            }}
+                                            value={equipment_status}
                                             className="mt-2 mb-2 form-control p-2 rounded-md w-full text-gray-500"
-                                            id="vehicleStatus"
+                                            id="equipmentStatus"
                                             required>
                                             {equipmentStatus.map((e) =>(
                                                 <option key={e} value={e}>{e}</option>
