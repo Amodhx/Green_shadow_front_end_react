@@ -3,6 +3,7 @@ import VehicleModel from "../../model/VehicleModel.ts";
 import {useDispatch} from "react-redux";
 import {addVehicle,updateVehicle} from "../../slices/VehicleSlice.ts";
 import Swal from 'sweetalert2'
+import ModalButton from "../ModalButton.tsx";
 
 function Vehicle({
                      closeModal,
@@ -206,24 +207,7 @@ function Vehicle({
                                 </div>
                             </form>
                         </div>
-                        <div className="mt-8 modal-footer flex justify-end">
-                            <button
-                                id="btnCloseVehicleDetails"
-                                type="button"
-                                className="mx-8 btn btn-secondary text-gray-300 hover:text-white"
-                                onClick={closeModal}
-                            >
-                                Close
-                            </button>
-                            <button
-                                onClick={submitBtnClick}
-                                id="btnSaveVehicleDetails"
-                                type="submit"
-                                className="p-2 rounded btn btn-success bg-green-500 hover:bg-green-600 text-white"
-                            >
-                                {buttonText}
-                            </button>
-                        </div>
+                        <ModalButton closeModal={closeModal} submitClick={submitBtnClick} buttonText={buttonText}/>
                     </div>
                 </div>
             </div>
