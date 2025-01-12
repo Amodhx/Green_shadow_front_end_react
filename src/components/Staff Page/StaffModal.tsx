@@ -1,6 +1,9 @@
 import React, {useEffect, useState} from "react";
 import ModalButton from "../ModalButton.tsx";
 import StaffModel from "../../model/StaffModel.ts";
+import {useDispatch} from "react-redux";
+import {addStaff} from "../../slices/StaffSlice.ts";
+import Swal from "sweetalert2";
 
 function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selectedStaff:StaffModel}) {
     const handleOutsideClick = (e: React.MouseEvent) => {
@@ -8,16 +11,46 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
             closeModal();
         }
     };
+    const  dispatch = useDispatch();
     useEffect(() => {
         setFieldIds([...fieldIds,'F001','F002'])
         setEquipmentIds([...equipmentIds,'E001','E002'])
         setVehicleIds([...vehicleIds,'V001','V002'])
         if (selectedStaff){
             setButtonText("Update Staff")
+            set_first_name(selectedStaff.first_name)
+            set_last_name(selectedStaff.last_name)
+            set_designation(selectedStaff.designation)
+            set_gender(selectedStaff.gender)
+            set_joined_date(selectedStaff.joined_date)
+            set_dob(selectedStaff.dob)
+            set_address_line_01(selectedStaff.address_line_01)
+            set_address_line_02(selectedStaff.address_line_02)
+            set_address_line_03(selectedStaff.address_line_03)
+            set_address_line_04(selectedStaff.address_line_04)
+            set_address_line_05(selectedStaff.address_line_05)
+            set_contact(selectedStaff.contact_number)
+            set_email(selectedStaff.email)
+            set_role(selectedStaff.role)
+            setAdditionalFields(selectedStaff.field_list)
+            setAdditionalVehicles(selectedStaff.vehicle_list)
+            setAdditionalEquipments(selectedStaff.equipment_list)
         }
     }, [selectedStaff]);
 
     function onFormSubmitClick(){
+        const staff = new StaffModel('1',first_name,last_name,designation,gender,joined_date,dob,address_line_01,address_line_02,
+            address_line_03,address_line_04,address_line_05,contact,email,role,additionalFields,additionalEquipments,additionalVehicles);
+        if (selectedStaff){
+
+        }else {
+            dispatch(addStaff(staff.toPlainObject()))
+            Swal.fire({
+                title: "Saved!",
+                icon: "success",
+                draggable: true
+            });
+        }
         closeModal();
     }
     const [designationOptions] = useState(['Select Designation','MANAGER','SENIOR_ASSISTANT_MANAGER',
@@ -28,6 +61,21 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
 
     const [buttonText,setButtonText] = useState('Save Staff')
 
+
+    const [first_name,set_first_name] = useState('')
+    const [last_name,set_last_name] = useState('')
+    const [designation,set_designation] = useState('')
+    const [gender,set_gender] = useState('')
+    const [joined_date,set_joined_date] = useState('')
+    const [dob,set_dob] = useState('')
+    const [address_line_01,set_address_line_01] = useState('')
+    const [address_line_02,set_address_line_02] = useState('')
+    const [address_line_03,set_address_line_03] = useState('')
+    const [address_line_04,set_address_line_04] = useState('')
+    const [address_line_05,set_address_line_05] = useState('')
+    const [contact,set_contact] = useState('')
+    const [email,set_email] = useState('')
+    const [role,set_role] = useState('')
 
     const [additionalFields,setAdditionalFields] = useState<string[]>([])
     const [additionalVehicles,setAdditionalVehicles] = useState<string[]>([])
@@ -95,6 +143,10 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                 <div>
                                     <label className="block text-sm font-medium mb-1">First Name</label>
                                     <input
+                                        onChange={(e) =>{
+                                            set_first_name(e.target.value)
+                                        }}
+                                        value={first_name}
                                         type="text"
                                         placeholder="First name"
                                         className="w-full px-4 py-2 bg-gray-700 text-white rounded"
@@ -103,6 +155,10 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Last Name</label>
                                     <input
+                                        onChange={(e) =>{
+                                            set_last_name(e.target.value)
+                                        }}
+                                        value={last_name}
                                         type="text"
                                         placeholder="Last name"
                                         className="w-full px-4 py-2 bg-gray-700 text-white rounded"
@@ -112,7 +168,12 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Designation</label>
-                                    <select className="w-full px-4 py-2 bg-gray-700 text-white rounded">
+                                    <select
+                                        onChange={(e)=>{
+                                            set_designation(e.target.value)
+                                        }}
+                                        value={designation}
+                                        className="w-full px-4 py-2 bg-gray-700 text-white rounded">
                                         {designationOptions.map((designation) => (
                                             <option key={designation} value={designation}>
                                                 {designation}
@@ -122,7 +183,12 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Gender</label>
-                                    <select className="w-full px-4 py-2 bg-gray-700 text-white rounded">
+                                    <select
+                                        onChange={(e)=>{
+                                            set_gender(e.target.value);
+                                        }}
+                                        value={gender}
+                                        className="w-full px-4 py-2 bg-gray-700 text-white rounded">
                                         {genderOptions.map((gender) => (
                                             <option key={gender} value={gender}>{gender}</option>
                                         ))}
@@ -133,6 +199,10 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Joined Date</label>
                                     <input
+                                        onChange={(e)=>{
+                                            set_joined_date(e.target.value)
+                                        }}
+                                        value={joined_date}
                                         type="text"
                                         placeholder="Enter Joined Date"
                                         className="w-full px-4 py-2 bg-gray-700 text-white rounded"
@@ -141,6 +211,10 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                 <div>
                                     <label className="block text-sm font-medium mb-1">DOB</label>
                                     <input
+                                        onChange={(e)=>{
+                                            set_dob(e.target.value)
+                                        }}
+                                        value={dob}
                                         type="text"
                                         placeholder="Enter Date of Birth"
                                         className="w-full px-4 py-2 bg-gray-700 text-white rounded"
@@ -151,6 +225,10 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Address Line 01</label>
                                     <input
+                                        onChange={(e)=>{
+                                            set_address_line_01(e.target.value)
+                                        }}
+                                        value={address_line_01}
                                         type="text"
                                         placeholder="Enter Building No"
                                         className="w-full px-4 py-2 bg-gray-700 text-white rounded"
@@ -159,6 +237,10 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Address Line 02</label>
                                     <input
+                                        onChange={(e)=>{
+                                            set_address_line_02(e.target.value)
+                                        }}
+                                        value={address_line_02}
                                         type="text"
                                         placeholder="Enter Lane"
                                         className="w-full px-4 py-2 bg-gray-700 text-white rounded"
@@ -169,6 +251,10 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Address Line 03</label>
                                     <input
+                                        onChange={(e)=>{
+                                            set_address_line_03(e.target.value)
+                                        }}
+                                        value={address_line_03}
                                         type="text"
                                         placeholder="Enter Main City"
                                         className="w-full px-4 py-2 bg-gray-700 text-white rounded"
@@ -177,6 +263,10 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Address Line 04</label>
                                     <input
+                                        onChange={(e)=>{
+                                            set_address_line_04(e.target.value)
+                                        }}
+                                        value={address_line_04}
                                         type="text"
                                         placeholder="Enter Main State"
                                         className="w-full px-4 py-2 bg-gray-700 text-white rounded"
@@ -187,6 +277,10 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Address Line 05</label>
                                     <input
+                                        onChange={(e)=>{
+                                            set_address_line_05(e.target.value)
+                                        }}
+                                        value={address_line_05}
                                         type="text"
                                         placeholder="Enter Postal Code"
                                         className="w-full px-4 py-2 bg-gray-700 text-white rounded"
@@ -195,6 +289,10 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Contact Number</label>
                                     <input
+                                        onChange={(e)=>{
+                                            set_contact(e.target.value)
+                                        }}
+                                        value={contact}
                                         type="text"
                                         placeholder="Enter Contact Number"
                                         className="w-full px-4 py-2 bg-gray-700 text-white rounded"
@@ -205,6 +303,10 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Email</label>
                                     <input
+                                        onChange={(e)=>{
+                                            set_email(e.target.value)
+                                        }}
+                                        value={email}
                                         type="text"
                                         placeholder="Enter Email"
                                         className="w-full px-4 py-2 bg-gray-700 text-white rounded"
@@ -212,7 +314,12 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Role</label>
-                                    <select className="w-full px-4 py-2 bg-gray-700 text-white rounded">
+                                    <select
+                                        onChange={(e)=>{
+                                            set_role(e.target.value)
+                                        }}
+                                        value={role}
+                                        className="w-full px-4 py-2 bg-gray-700 text-white rounded">
                                         {roleOptions.map((role) => (
                                             <option key={role} value={role}>{role}</option>
                                         ))}
