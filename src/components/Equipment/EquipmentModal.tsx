@@ -3,6 +3,7 @@ import EquipmentModel from "../../model/EquipmentModel.ts";
 import {useDispatch} from "react-redux";
 import {addEquipment, updateEquipment} from "../../slices/EquipmentSlice.ts";
 import Swal from "sweetalert2";
+import ModalButton from "../ModalButton.tsx";
 
 function EquipmentModal({
                             closeModal,
@@ -44,7 +45,6 @@ function EquipmentModal({
     function submitBtnClick(){
         const equipmentModel = new EquipmentModel('1',equipment_name,equipment_type,equipment_count,equipment_status,additionalStaff,additionalFields);
         if (selectedEquipment){
-        //     Update equipment
             equipmentModel.setEquipmentId(selectedEquipment.equipment_id)
             Swal.fire({
                 title: "Do you want to Update the changes?",
@@ -305,24 +305,7 @@ function EquipmentModal({
                                 </div>
                             </form>
                         </div>
-                        <div className="mt-8 modal-footer flex justify-end">
-                            <button
-                                id="btnCloseVehicleDetails"
-                                type="button"
-                                className="mx-8 btn btn-secondary text-gray-300 hover:text-white"
-                                onClick={closeModal}
-                            >
-                                Close
-                            </button>
-                            <button
-                                onClick={submitBtnClick}
-                                id="btnSaveVehicleDetails"
-                                type="submit"
-                                className="p-2 rounded btn btn-success bg-green-500 hover:bg-green-600 text-white"
-                            >
-                                {buttonText}
-                            </button>
-                        </div>
+                        <ModalButton closeModal={closeModal} submitClick={submitBtnClick} buttonText={buttonText}/>
                     </div>
                 </div>
             </div>
