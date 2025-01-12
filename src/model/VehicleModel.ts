@@ -7,7 +7,9 @@ class VehicleModel{
     staff_id:string
     remarks:string
 
-
+    setVehicleId(id:string){
+        this.vehicle_id = id;
+    }
     constructor(vehicle_id: string, licence_plate_number: string, vehicle_category: string, fuel_type: string, status: string, staff_id: string, remarks: string) {
         this.vehicle_id = vehicle_id;
         this.licence_plate_number = licence_plate_number;

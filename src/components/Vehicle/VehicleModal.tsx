@@ -40,6 +40,7 @@ function Vehicle({
     function submitBtnClick(){
         const vehicle_modal = new VehicleModel('1', licence_plate_number, vehicle_category, vehicle_fuel_type, vehicle_status, staff_id, remarks)
         if (selectedVehicle){
+            vehicle_modal.setVehicleId(selectedVehicle.vehicle_id);
             Swal.fire({
                 title: "Do you want to Update the changes?",
                 showDenyButton: true,

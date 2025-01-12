@@ -1,8 +1,22 @@
 import EquipmentModel from "../../model/EquipmentModel.ts";
 import {useSelector} from "react-redux";
+import {useState} from "react";
+import EquipmentModal from "./EquipmentModal.tsx";
 
 function EquipmentTable(){
     const equipments : EquipmentModel[] = useSelector((state : any) => state.equipments);
+    const [selectedEquipment, setSelectedEquipment] = useState<EquipmentModel | null>(null);
+
+    function updateEquipmentDetail(equipmentId:string){
+        const equipment = equipments.find((v:EquipmentModel) => v.equipment_id === equipmentId);
+        if (equipment){
+            setSelectedEquipment(equipment);
+        }
+
+    }
+    function closeModal(){
+        setSelectedEquipment(null);
+    }
     return(
         <>
             <div className="table-container container mx-auto p-4 rounded-lg overflow-hidden">
@@ -22,7 +36,7 @@ function EquipmentTable(){
                     </thead>
                     <tbody>
                     {equipments.map((equipment) => (
-                        <tr className="hover:bg-green-100">
+                        <tr key={equipment.equipment_id} className="hover:bg-green-100">
                             <td className="p-2">{equipment.equipment_id}</td>
                             <td className="p-2">{equipment.equipment_name}</td>
                             <td className="p-2">{equipment.type}</td>
@@ -31,7 +45,11 @@ function EquipmentTable(){
                             <td className="p-2">{equipment.staff_list}</td>
                             <td className="p-2">{equipment.field_list}</td>
                             <td className="p-2">
-                                <button className="bg-blue-500 text-white px-2 py-1 hover:bg-blue-600 rounded">Edit
+                                <button
+                                    onClick={() =>{
+                                        updateEquipmentDetail(equipment.equipment_id);
+                                    }}
+                                    className="bg-blue-500 text-white px-2 py-1 hover:bg-blue-600 rounded">Edit
                                 </button>
                             </td>
                             <td className="p-2">
@@ -44,6 +62,12 @@ function EquipmentTable(){
                     </tbody>
                 </table>
             </div>
+            {selectedEquipment && (
+                <EquipmentModal
+                    closeModal={closeModal}
+                    selectedEquipment={selectedEquipment}
+                />
+            )}
         </>
     )
 }

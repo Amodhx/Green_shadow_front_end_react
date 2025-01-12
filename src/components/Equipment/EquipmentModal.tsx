@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import EquipmentModel from "../../model/EquipmentModel.ts";
 import {useDispatch} from "react-redux";
-import {addEquipment} from "../../slices/EquipmentSlice.ts";
+import {addEquipment, updateEquipment} from "../../slices/EquipmentSlice.ts";
 import Swal from "sweetalert2";
 
 function EquipmentModal({
@@ -32,12 +32,34 @@ function EquipmentModal({
     useEffect(() => {
         if (selectedEquipment) {
             setButtonText('Update Equipment')
+            set_equipment_name(selectedEquipment.equipment_name)
+            set_equipment_type(selectedEquipment.type)
+            set_equipment_status(selectedEquipment.status)
+            set_equipment_count(selectedEquipment.count)
+            setAdditionalStaff(selectedEquipment.staff_list)
+            setAdditionalFields(selectedEquipment.field_list)
+
         }
     }, [selectedEquipment]);
     function submitBtnClick(){
         const equipmentModel = new EquipmentModel('1',equipment_name,equipment_type,equipment_count,equipment_status,additionalStaff,additionalFields);
         if (selectedEquipment){
         //     Update equipment
+            equipmentModel.setEquipmentId(selectedEquipment.equipment_id)
+            Swal.fire({
+                title: "Do you want to Update the changes?",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: "Save",
+                denyButtonText: `Don't save`
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    dispatch(updateEquipment(equipmentModel.toPlainObject()))
+                    Swal.fire("Saved!", "", "success");
+                } else if (result.isDenied) {
+                    Swal.fire("Changes are not saved", "", "info");
+                }
+            });
         }else {
             dispatch(addEquipment(equipmentModel.toPlainObject()));
             Swal.fire({
@@ -63,19 +85,24 @@ function EquipmentModal({
         setAdditionalFields([...additionalFields,'']);
     }
     function setSelectedStaffId(index:number , e:any){
-        additionalStaff[index] = e.target.value;
-        console.log(additionalStaff);
+        const updatedStaff = [...additionalStaff];
+        updatedStaff[index] = e.target.value;
+        setAdditionalStaff(updatedStaff)
     }
     function setSelectedFieldId(index:number , e:any){
-        additionalFields[index] = e.target.value;
+        const updatedField = [...additionalFields];
+        updatedField[index] = e.target.value;
+        setAdditionalFields(updatedField)
     }
     function removeStaffIdSelector(index:number){
-        additionalStaff.splice(index,1);
-        setAdditionalStaff([...additionalStaff])
+        const updatedStaff = [...additionalStaff];
+        updatedStaff.splice(index, 1);  //Modify the copy
+        setAdditionalStaff(updatedStaff);
     }
     function removeFieldIdSelector(index:number){
-        additionalFields.splice(index,1);
-        setAdditionalFields([...additionalStaff])
+        const updatedFields = [...additionalFields]
+        updatedFields.splice(index,1)
+        setAdditionalFields(updatedFields);
     }
     return (
         <>
@@ -195,6 +222,7 @@ function EquipmentModal({
                                                 <div key={index} className={'flex'}>
                                                     <div className={'w-[200px]'}>
                                                         <select
+                                                            value={selectedEquipment?.staff_list[index]}
                                                             onChange={(e) => {
                                                                 setSelectedStaffId(index, e)
                                                             }}
@@ -225,7 +253,7 @@ function EquipmentModal({
                                     <div>
                                         <div className="flex justify-between items-center mb-2">
                                             <label className="form-label">
-                                                Staff
+                                            Staff
                                             </label>
                                             <button
                                                 onClick={addFieldDropdown}
@@ -246,6 +274,7 @@ function EquipmentModal({
                                                 <div key={index} className={'flex'}>
                                                     <div className={'w-[200px]'}>
                                                         <select
+                                                            value={selectedEquipment?.field_list[index]}
                                                             onChange={(e) => {
                                                                 setSelectedFieldId(index, e)
                                                             }}

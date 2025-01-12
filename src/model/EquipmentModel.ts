@@ -8,6 +8,9 @@ class EquipmentModel{
     field_list:string[]
 
 
+    setEquipmentId(id:string){
+        this.equipment_id = id;
+    }
     constructor(equipment_id: string, equipment_name: string, type: string, count: string, status: string, staff_list: string[], field_list: string[]) {
         this.equipment_id = equipment_id;
         this.equipment_name = equipment_name;
