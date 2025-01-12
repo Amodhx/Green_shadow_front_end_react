@@ -94,12 +94,14 @@ function EquipmentModal({
         updatedField[index] = e.target.value;
         setAdditionalFields(updatedField)
     }
-    function removeStaffIdSelector(index:number){
+    function removeStaffIdSelector(index:number,event:any){
+        event.preventDefault()
         const updatedStaff = [...additionalStaff];
         updatedStaff.splice(index, 1);  //Modify the copy
         setAdditionalStaff(updatedStaff);
     }
-    function removeFieldIdSelector(index:number){
+    function removeFieldIdSelector(index:number,event:any){
+        event.preventDefault()
         const updatedFields = [...additionalFields]
         updatedFields.splice(index,1)
         setAdditionalFields(updatedFields);
@@ -237,8 +239,8 @@ function EquipmentModal({
                                                     <div>
                                                         <button
                                                             key={index}
-                                                            onClick={() => {
-                                                                removeStaffIdSelector(index)
+                                                            onClick={(e) => {
+                                                                removeStaffIdSelector(index,e)
                                                             }}
                                                             className={'mt-2 ml-4 h-[40px] w-[70px] bg-green-500 text-white rounded-md hover:bg-red-500'}>Remove
                                                         </button>
@@ -289,8 +291,8 @@ function EquipmentModal({
                                                     <div>
                                                         <button
                                                             key={index}
-                                                            onClick={() => {
-                                                                removeFieldIdSelector(index)
+                                                            onClick={(e) => {
+                                                                removeFieldIdSelector(index,e)
                                                             }}
                                                             className={'mt-2 ml-4 h-[40px] w-[70px] bg-green-500 text-white rounded-md hover:bg-red-500'}>Remove
                                                         </button>
