@@ -1,8 +1,21 @@
 import '../../css/Table.css'
 import StaffModel from "../../model/StaffModel.ts";
 import {useSelector} from "react-redux";
+import {useState} from "react";
+import StaffModal from "./StaffModal.tsx";
 function StaffTable(){
     const staffs : StaffModel[] = useSelector((state : any) => state.staffs);
+    const [selectedStaff, setSelectedStaff] = useState<StaffModel | null>(null)
+
+    function onEditBtnClick(staffId:string){
+        const staff = staffs.find((staff:StaffModel) => staff.staff_id === staffId);
+        if (staff){
+            setSelectedStaff(staff)
+        }
+    }
+    function closeModal(){
+        setSelectedStaff(null)
+    }
     return(
         <>
             <div className="table-container container mx-auto p-4 rounded-lg overflow-hidden">
@@ -29,7 +42,7 @@ function StaffTable(){
                     </thead>
                     <tbody>
                     {staffs.map((staff) => (
-                        <tr className="hover:bg-green-100">
+                        <tr key={staff.staff_id} className="hover:bg-green-100">
                             <td className="p-2">{staff.staff_id}</td>
                             <td className="p-2">{staff.first_name}</td>
                             <td className="p-2">{staff.last_name}</td>
@@ -45,8 +58,11 @@ function StaffTable(){
                             <td className="p-2">{staff.equipment_list}</td>
                             <td className="p-2">{staff.vehicle_list}</td>
                             <td className="p-2">
-
-                                <button className="bg-blue-500 text-white px-2 py-1 hover:bg-blue-600 rounded">Edit
+                                <button
+                                    onClick={() =>{
+                                        onEditBtnClick(staff.staff_id);
+                                    }}
+                                    className="bg-blue-500 text-white px-2 py-1 hover:bg-blue-600 rounded">Edit
                                 </button>
                             </td>
                             <td className="p-2">
@@ -59,6 +75,12 @@ function StaffTable(){
                     </tbody>
                 </table>
             </div>
+            {selectedStaff && (
+                <StaffModal
+                    closeModal={closeModal}
+                    selectedStaff={selectedStaff}
+                />
+            )}
         </>
     )
 }
