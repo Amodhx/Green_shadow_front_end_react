@@ -1,5 +1,8 @@
 import '../../css/Table.css'
+import StaffModel from "../../model/StaffModel.ts";
+import {useSelector} from "react-redux";
 function StaffTable(){
+    const staffs : StaffModel[] = useSelector((state : any) => state.staffs);
     return(
         <>
             <div className="table-container container mx-auto p-4 rounded-lg overflow-hidden">
@@ -25,28 +28,34 @@ function StaffTable(){
                     </tr>
                     </thead>
                     <tbody>
-                    <tr className="hover:bg-green-100">
-                        <td className="p-2">1</td>
-                        <td className="p-2">John</td>
-                        <td className="p-2">Doe</td>
-                        <td className="p-2">Manager</td>
-                        <td className="p-2">Male</td>
-                        <td className="p-2">2022-01-10</td>
-                        <td className="p-2">1990-06-15</td>
-                        <td className="p-2">123 Street, City</td>
-                        <td className="p-2">1234567890</td>
-                        <td className="p-2">john.doe@example.com</td>
-                        <td className="p-2">Admin</td>
-                        <td className="p-2">Field A</td>
-                        <td className="p-2">Equipment X</td>
-                        <td className="p-2">Vehicle Y</td>
-                        <td className="p-2">
-                            <button className="bg-blue-500 text-white px-2 py-1 hover:bg-blue-600 rounded">Edit</button>
-                        </td>
-                        <td className="p-2">
-                            <button className="bg-red-500 text-white px-2 py-1 hover:bg-red-600 rounded">Delete</button>
-                        </td>
-                    </tr>
+                    {staffs.map((staff) => (
+                        <tr className="hover:bg-green-100">
+                            <td className="p-2">{staff.staff_id}</td>
+                            <td className="p-2">{staff.first_name}</td>
+                            <td className="p-2">{staff.last_name}</td>
+                            <td className="p-2">{staff.designation}</td>
+                            <td className="p-2">{staff.gender}</td>
+                            <td className="p-2">{staff.joined_date}</td>
+                            <td className="p-2">{staff.dob}</td>
+                            <td className="p-2">{staff.address_line_04}</td>
+                            <td className="p-2">{staff.contact_number}</td>
+                            <td className="p-2">{staff.email}</td>
+                            <td className="p-2">{staff.role}</td>
+                            <td className="p-2">{staff.field_list}</td>
+                            <td className="p-2">{staff.equipment_list}</td>
+                            <td className="p-2">{staff.vehicle_list}</td>
+                            <td className="p-2">
+
+                                <button className="bg-blue-500 text-white px-2 py-1 hover:bg-blue-600 rounded">Edit
+                                </button>
+                            </td>
+                            <td className="p-2">
+                                <button className="bg-red-500 text-white px-2 py-1 hover:bg-red-600 rounded">Delete
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+
                     </tbody>
                 </table>
             </div>
