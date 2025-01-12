@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import ModalButton from "../ModalButton.tsx";
 import StaffModel from "../../model/StaffModel.ts";
 import {useDispatch} from "react-redux";
-import {addStaff} from "../../slices/StaffSlice.ts";
+import {addStaff, updateStaff} from "../../slices/StaffSlice.ts";
 import Swal from "sweetalert2";
 
 function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selectedStaff:StaffModel}) {
@@ -42,7 +42,21 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
         const staff = new StaffModel('1',first_name,last_name,designation,gender,joined_date,dob,address_line_01,address_line_02,
             address_line_03,address_line_04,address_line_05,contact,email,role,additionalFields,additionalEquipments,additionalVehicles);
         if (selectedStaff){
-
+            staff.staff_id = selectedStaff.staff_id;
+            Swal.fire({
+                title: "Do you want to Update the changes?",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: "Save",
+                denyButtonText: `Don't save`
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    dispatch(updateStaff(staff.toPlainObject()))
+                    Swal.fire("Saved!", "", "success");
+                } else if (result.isDenied) {
+                    Swal.fire("Changes are not saved", "", "info");
+                }
+            });
         }else {
             dispatch(addStaff(staff.toPlainObject()))
             Swal.fire({
@@ -94,17 +108,20 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
     const addEquipmentDropdown = ()=>{
         setAdditionalEquipments([...additionalEquipments,'']);
     }
-    function removeFieldIdSelector(index:number){
+    function removeFieldIdSelector(index:number,event:any){
+        event.preventDefault()
         const updatedFields = [...additionalFields]
         updatedFields.splice(index,1)
         setAdditionalFields(updatedFields);
     }
-    function removeVehicleIdSelector(index:number){
+    function removeVehicleIdSelector(index:number,event:any){
+        event.preventDefault()
         const updatedVehicle = [...additionalVehicles]
         updatedVehicle.splice(index,1)
         setAdditionalVehicles(updatedVehicle);
     }
-    function removeEquipmentIdSelector(index:number){
+    function removeEquipmentIdSelector(index:number,event:any){
+        event.preventDefault()
         const updatedEquipment = [...additionalEquipments]
         updatedEquipment.splice(index,1)
         setAdditionalEquipments(updatedEquipment);
@@ -135,7 +152,7 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
             >
                 <div className="bg-gray-800 text-white rounded-lg shadow-lg max-w-4xl w-full">
                     <div className="px-6 py-4 border-b border-gray-700">
-                        <h5 className="text-lg font-semibold">Add New Staff Details</h5>
+                        <h5 className="text-lg font-semibold">{selectedStaff ? 'Edit Staff Details' : 'Add New Staff Details'}</h5>
                     </div>
                     <div className="px-6 py-4">
                         <form className="space-y-4 max-h-[520px] overflow-y-auto">
@@ -367,8 +384,8 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                                 <div>
                                                     <button
                                                         key={index}
-                                                        onClick={() => {
-                                                            removeFieldIdSelector(index)
+                                                        onClick={(e) => {
+                                                            removeFieldIdSelector(index,e)
                                                         }}
                                                         className={'mt-2 ml-4 h-[40px] w-[70px] bg-green-500 text-white rounded-md hover:bg-red-500'}>Remove
                                                     </button>
@@ -419,8 +436,8 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                                 <div>
                                                     <button
                                                         key={index}
-                                                        onClick={() => {
-                                                            removeEquipmentIdSelector(index)
+                                                        onClick={(e) => {
+                                                            removeEquipmentIdSelector(index,e)
                                                         }}
                                                         className={'mt-2 ml-4 h-[40px] w-[70px] bg-green-500 text-white rounded-md hover:bg-red-500'}>Remove
                                                     </button>
@@ -438,7 +455,7 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                 {/* Vehicle List */}
                                 <div>
                                     <div className="flex justify-between items-center mb-2">
-                                        <label className="form-label">
+                                    <label className="form-label">
                                             Vehicle
                                         </label>
                                         <button
@@ -474,8 +491,8 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                                 <div>
                                                     <button
                                                         key={index}
-                                                        onClick={() => {
-                                                            removeVehicleIdSelector(index)
+                                                        onClick={(e) => {
+                                                            removeVehicleIdSelector(index,e)
                                                         }}
                                                         className={'mt-2 ml-4 h-[40px] w-[70px] bg-green-500 text-white rounded-md hover:bg-red-500'}>Remove
                                                     </button>
