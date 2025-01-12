@@ -1,6 +1,12 @@
 import '../css/Table.css'
 import StaffTable from "../components/Staff Page/StaffTable.tsx";
+import {useState} from "react";
+import StaffModal from "../components/Staff Page/StaffModal.tsx";
+import AddNewButton from "../components/AddNewButton.tsx";
 function Staff(){
+    const [isModalShow, setIsModalShow] = useState(false)
+    const openModal = () => setIsModalShow(true);
+    const closeModal = () => setIsModalShow(false);
     return(
         <>
             <div className="flex items-center justify-between w-full h-16 bg-gray-50 p-4 mt-12">
@@ -17,12 +23,12 @@ function Staff(){
                         <option>All Staff</option>
                     </select>
                 </div>
-                <button
-                    className="mt-8 h-10 px-4 bg-green-600 text-white rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                    Add New Staff
-                </button>
+                <AddNewButton openModal={openModal} text={'Add New Staff'}/>
             </div>
             <StaffTable/>
+            {isModalShow && (
+                <StaffModal closeModal={closeModal}/>
+            )}
         </>
     )
 }
