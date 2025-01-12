@@ -253,7 +253,7 @@ function EquipmentModal({
                                     <div>
                                         <div className="flex justify-between items-center mb-2">
                                             <label className="form-label">
-                                            Staff
+                                            Field
                                             </label>
                                             <button
                                                 onClick={addFieldDropdown}
