@@ -17,7 +17,7 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
         }
     }, [selectedStaff]);
 
-    function onFormsubmitClick(){
+    function onFormSubmitClick(){
         closeModal();
     }
     const [designationOptions] = useState(['Select Designation','MANAGER','SENIOR_ASSISTANT_MANAGER',
@@ -384,35 +384,10 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                 </div>
 
                             </div>
-
-                            {/* Add additional input fields in similar manner */}
-                            {/*<div>*/}
-                            {/*    <div className="flex justify-between items-center mb-2">*/}
-                            {/*        <label className="text-sm font-medium">Fields</label>*/}
-                            {/*        <button*/}
-                            {/*            type="button"*/}
-                            {/*            className="bg-green-500 text-white px-3 py-1 rounded"*/}
-                            {/*            onClick={addField}*/}
-                            {/*        >*/}
-                            {/*            Add Field*/}
-                            {/*        </button>*/}
-                            {/*    </div>*/}
-                            {/*    <div>*/}
-                            {/*        {fields.map((_, index) => (*/}
-                            {/*            <div className="mt-2" key={index}>*/}
-                            {/*                <select className="w-full px-4 py-2 bg-gray-700 text-white rounded">*/}
-                            {/*                    <option>Select Field</option>*/}
-                            {/*                    /!* Add field options *!/*/}
-                            {/*                </select>*/}
-                            {/*            </div>*/}
-                            {/*        ))}*/}
-                            {/*    </div>*/}
-                            {/*</div>*/}
-                            {/* Similar setup for Vehicles and Equipment */}
                         </form>
                     </div>
                     <div className="px-6 py-4 border-t border-gray-700 flex justify-end space-x-3">
-                        <ModalButton closeModal={closeModal} submitClick={onFormsubmitClick} buttonText={buttonText}/>
+                        <ModalButton closeModal={closeModal} submitClick={onFormSubmitClick} buttonText={buttonText}/>
                     </div>
                 </div>
             </div>
