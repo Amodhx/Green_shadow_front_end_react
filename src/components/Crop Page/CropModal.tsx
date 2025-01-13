@@ -2,13 +2,14 @@ import ModalButton from "../ModalButton.tsx";
 import React, {useEffect, useState} from "react";
 import CropModel from "../../model/CropModel.ts";
 import {useDispatch} from "react-redux";
-import {addCrop} from "../../slices/CropSlice.ts";
+import {addCrop, updateCrop} from "../../slices/CropSlice.ts";
 import Swal from "sweetalert2";
 
 function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCrop:CropModel | null}) {
     const [fieldIds,setFieldIds] = useState<string[]>(['Select Field Id'])
     const [additionalFields,setAdditionalFields] = useState<string[]>([])
     const dispatch = useDispatch();
+    const [buttonText,setButtonText] = useState('Save Crop')
 
     const [crop_common_name ,set_crop_common_name ] = useState('')
     const [crop_scientific_name ,set_crop_scientific_name] = useState('')
@@ -54,6 +55,7 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
     useEffect(() => {
         setFieldIds([...fieldIds,'F001','F002'])
         if (selectedCrop){
+            setButtonText('Update Crop')
             set_crop_common_name(selectedCrop.crop_common_name)
             set_crop_scientific_name(selectedCrop.crop_scientific_name)
             set_crop_image(selectedCrop.crop_image)
@@ -67,7 +69,21 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
         const crop = new CropModel('1',crop_common_name,crop_scientific_name,crop_image,category,season,additionalFields,[])
 
         if (selectedCrop){
-        //     Todo : Update Crop
+            crop.setCropId(selectedCrop.crop_id)
+            Swal.fire({
+                title: "Do you want to Update the changes?",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: "Save",
+                denyButtonText: `Don't save`
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    dispatch(updateCrop(crop.toPlainObject()))
+                    Swal.fire("Saved!", "", "success");
+                } else if (result.isDenied) {
+                    Swal.fire("Changes are not saved", "", "info");
+                }
+            });
         }else {
             dispatch(addCrop(crop.toPlainObject()));
             Swal.fire({
@@ -92,12 +108,12 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
                 <div className="bg-gray-800 text-white rounded-lg shadow-lg w-full max-w-4xl">
                     {/* Modal Header */}
                     <div className="flex items-center justify-between p-4 border-b border-gray-700">
-                        <h5 className="text-lg font-semibold">Add New Crop Details</h5>
+                        <h5 className="text-lg font-semibold">{selectedCrop ? 'Edit Crop Details' : 'Add New Crop Details'}</h5>
                     </div>
 
                     {/* Modal Body */}
                     <div className="p-6">
-                        <form className="space-y-4">
+                        <form className="space-y-4 max-h-[520px] overflow-y-auto">
                             {/* Row 1: Common Name and Scientific Name */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
@@ -240,7 +256,7 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
 
                     {/* Modal Footer */}
                     <div className="flex items-center justify-end p-4 border-t border-gray-700">
-                        <ModalButton closeModal={closeModal} submitClick={onSubmitClick} buttonText={'Save Crop'}/>
+                        <ModalButton closeModal={closeModal} submitClick={onSubmitClick} buttonText={buttonText}/>
                     </div>
                 </div>
             </div>
