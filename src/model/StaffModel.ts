@@ -18,6 +18,10 @@ class StaffModel{
     equipment_list:string[]
     vehicle_list:string[]
 
+    setStaffId(id:string){
+        this.staff_id = id;
+    }
+
 
     constructor(staff_id: string, first_name: string, last_name: string, designation: string, gender: string, joined_date: string, dob: string, address_line_01: string, address_line_02: string, address_line_03: string, address_line_04: string, address_line_05: string, contact_number: string, email: string, role: string, field_list: string[], equipment_list: string[], vehicle_list: string[]) {
         this.staff_id = staff_id;

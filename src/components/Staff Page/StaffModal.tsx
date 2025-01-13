@@ -42,7 +42,7 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
         const staff = new StaffModel('1',first_name,last_name,designation,gender,joined_date,dob,address_line_01,address_line_02,
             address_line_03,address_line_04,address_line_05,contact,email,role,additionalFields,additionalEquipments,additionalVehicles);
         if (selectedStaff){
-            staff.staff_id = selectedStaff.staff_id;
+            staff.setStaffId(selectedStaff.staff_id)
             Swal.fire({
                 title: "Do you want to Update the changes?",
                 showDenyButton: true,
