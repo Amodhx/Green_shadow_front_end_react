@@ -12,32 +12,29 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
 
     const [crop_common_name ,set_crop_common_name ] = useState('')
     const [crop_scientific_name ,set_crop_scientific_name] = useState('')
-    const [crop_image,set_crop_image] = useState<File | null>(null);
+    const [crop_image,set_crop_image] = useState<string | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [category,set_category] = useState('')
     const [season,set_season] = useState('')
 
 
-    const handleImageChange = (e: any | null , imgFile : File | null) => {
-        let file;
-        if (imgFile){
-            file = imgFile;
-        }else {
-            file == e.target.files?.[0];
-        }
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
         if (file) {
-            set_crop_image(file); // Set the image file
             const reader = new FileReader();
-
-            reader.onload = () => {
-                if (reader.readyState === FileReader.DONE) {
-                    setPreviewImage(reader.result as string); // Set the preview URL
-                }
+            reader.onloadend = () => {
+                const base64String = reader.result as string;
+                set_crop_image(base64String);
+                setPreviewImage(base64String)
             };
 
-            reader.readAsDataURL(file); // Read the file as a Data URL
+            reader.readAsDataURL(file);
         }
     };
+    function settingPreviewImage(img:string | null){
+        setPreviewImage(img)
+    }
+
     const addFieldDropdown = ()=>{
         setAdditionalFields([...additionalFields,'']);
     }
@@ -60,9 +57,10 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
             set_crop_common_name(selectedCrop.crop_common_name)
             set_crop_scientific_name(selectedCrop.crop_scientific_name)
             set_crop_image(selectedCrop.crop_image)
-            handleImageChange('e',selectedCrop.crop_image);
             set_category(selectedCrop.category)
             set_season(selectedCrop.season)
+            setAdditionalFields(selectedCrop.field_list)
+            settingPreviewImage(selectedCrop.crop_image)
         }
     }, []);
     function onSubmitClick(){
@@ -78,7 +76,7 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
                 draggable: true
             });
         }
-        closeModal
+        closeModal()
     }
     const handleOutsideClick = (e: React.MouseEvent) => {
         if (e.target === e.currentTarget) {
@@ -164,7 +162,7 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
                                 <label className="block text-sm font-medium mb-1">Crop Image</label>
                                 <input
                                     onChange={(e)=>{
-                                        handleImageChange(e,null)
+                                        handleFileChange(e)
                                     }}
                                     type="file"
                                     accept="image/*"
@@ -241,7 +239,6 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
                     </div>
 
                     {/* Modal Footer */}
-
                     <div className="flex items-center justify-end p-4 border-t border-gray-700">
                         <ModalButton closeModal={closeModal} submitClick={onSubmitClick} buttonText={'Save Crop'}/>
                     </div>

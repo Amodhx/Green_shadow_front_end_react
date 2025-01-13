@@ -1,6 +1,19 @@
 import cropImg from '../../assets/images.jpg'
 import CardButtons from "../CardButtons.tsx";
-function CropCard() {
+import {useState} from "react";
+import CropModel from "../../model/CropModel.ts";
+import CropModal from "./CropModal.tsx";
+function CropCard({crop}: {crop: CropModel}) {
+    const [selectedCrop, setSelectedCrop] = useState<CropModel | null>(null)
+    function onUpdateClick(){
+        setSelectedCrop(crop);
+    }
+    function onDeleteClick(){
+
+    }
+    function closeModal(){
+        setSelectedCrop(null)
+    }
     return(
         <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
@@ -24,10 +37,14 @@ function CropCard() {
                         <p className="text-sm mb-2">
                             <strong>Field ID:</strong> DummyField123
                         </p>
-                        <CardButtons/>
+                        <CardButtons onUpdateCropClick={onUpdateClick} onDeleteCropClick={onDeleteClick}/>
                     </div>
                 </div>
             </div>
+
+            {selectedCrop && (
+                <CropModal closeModal={closeModal} selectedCrop={crop}/>
+            )}
 
         </>
     )
