@@ -1,15 +1,91 @@
 import ModalButton from "../ModalButton.tsx";
-import React from "react";
+import React, {useEffect, useState} from "react";
+import CropModel from "../../model/CropModel.ts";
+import {useDispatch} from "react-redux";
+import {addCrop} from "../../slices/CropSlice.ts";
+import Swal from "sweetalert2";
 
-function CropModal({closeModal}: {closeModal: () => void}) {
+function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCrop:CropModel | null}) {
+    const [fieldIds,setFieldIds] = useState<string[]>(['Select Field Id'])
+    const [additionalFields,setAdditionalFields] = useState<string[]>([])
+    const dispatch = useDispatch();
+
+    const [crop_common_name ,set_crop_common_name ] = useState('')
+    const [crop_scientific_name ,set_crop_scientific_name] = useState('')
+    const [crop_image,set_crop_image] = useState<File | null>(null);
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
+    const [category,set_category] = useState('')
+    const [season,set_season] = useState('')
+
+
+    const handleImageChange = (e: any | null , imgFile : File | null) => {
+        let file;
+        if (imgFile){
+            file = imgFile;
+        }else {
+            file == e.target.files?.[0];
+        }
+        if (file) {
+            set_crop_image(file); // Set the image file
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                if (reader.readyState === FileReader.DONE) {
+                    setPreviewImage(reader.result as string); // Set the preview URL
+                }
+            };
+
+            reader.readAsDataURL(file); // Read the file as a Data URL
+        }
+    };
+    const addFieldDropdown = ()=>{
+        setAdditionalFields([...additionalFields,'']);
+    }
+
+    function removeFieldIdSelector(index:number,event:any){
+        event.preventDefault()
+        const updatedFields = [...additionalFields]
+        updatedFields.splice(index,1)
+        setAdditionalFields(updatedFields);
+    }
+
+    function setSelectedFieldId(index:number , e:any){
+        const updatedField = [...additionalFields];
+        updatedField[index] = e.target.value;
+        setAdditionalFields(updatedField)
+    }
+    useEffect(() => {
+        setFieldIds([...fieldIds,'F001','F002'])
+        if (selectedCrop){
+            set_crop_common_name(selectedCrop.crop_common_name)
+            set_crop_scientific_name(selectedCrop.crop_scientific_name)
+            set_crop_image(selectedCrop.crop_image)
+            handleImageChange('e',selectedCrop.crop_image);
+            set_category(selectedCrop.category)
+            set_season(selectedCrop.season)
+        }
+    }, []);
     function onSubmitClick(){
-        closeModal()
+        const crop = new CropModel('1',crop_common_name,crop_scientific_name,crop_image,category,season,additionalFields,[])
+
+        if (selectedCrop){
+        //     Todo : Update Crop
+        }else {
+            dispatch(addCrop(crop.toPlainObject()));
+            Swal.fire({
+                title: "Saved!",
+                icon: "success",
+                draggable: true
+            });
+        }
+        closeModal
     }
     const handleOutsideClick = (e: React.MouseEvent) => {
         if (e.target === e.currentTarget) {
             closeModal();
         }
     };
+
     return(
         <>
             <div
@@ -29,6 +105,10 @@ function CropModal({closeModal}: {closeModal: () => void}) {
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Crop Common Name</label>
                                     <input
+                                        onChange={(e)=>{
+                                            set_crop_common_name(e.target.value);
+                                        }}
+                                        value={selectedCrop?.crop_common_name}
                                         type="text"
                                         placeholder="Crop Common Name"
                                         className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -38,6 +118,10 @@ function CropModal({closeModal}: {closeModal: () => void}) {
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Crop Scientific Name</label>
                                     <input
+                                        onChange={(e) =>{
+                                            set_crop_scientific_name(e.target.value);
+                                        }}
+                                        value={selectedCrop?.crop_scientific_name}
                                         type="text"
                                         placeholder="Crop Scientific Name"
                                         className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -51,6 +135,10 @@ function CropModal({closeModal}: {closeModal: () => void}) {
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Crop Category</label>
                                     <input
+                                        onChange={(e)=>{
+                                            set_category(e.target.value);
+                                        }}
+                                        value={selectedCrop?.category}
                                         type="text"
                                         placeholder="Crop Category"
                                         className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -60,6 +148,10 @@ function CropModal({closeModal}: {closeModal: () => void}) {
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Crop Season</label>
                                     <input
+                                        onChange={(e)=>{
+                                            set_season(e.target.value)
+                                        }}
+                                        value={selectedCrop?.season}
                                         type="text"
                                         placeholder="Crop Season"
                                         className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -67,40 +159,83 @@ function CropModal({closeModal}: {closeModal: () => void}) {
                                     />
                                 </div>
                             </div>
-
-                            {/* Row 3: Field List */}
-                            <div>
-                                <div className="flex items-center justify-between mb-2">
-                                    <label className="block text-sm font-medium">Field</label>
-                                    <button
-                                        type="button"
-                                        className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-                                    >
-                                        Add Field
-                                    </button>
-                                </div>
-                                <select
-                                    className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500 mt-2">
-                                    <option value="">Select Field</option>
-                                </select>
-                                <div className="mt-2">
-                                    {/* Dynamic additional dropdowns will go here */}
-                                </div>
-                            </div>
-
                             {/* Row 4: Crop Image */}
                             <div>
                                 <label className="block text-sm font-medium mb-1">Crop Image</label>
                                 <input
+                                    onChange={(e)=>{
+                                        handleImageChange(e,null)
+                                    }}
                                     type="file"
                                     accept="image/*"
                                     className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                                 />
-                                <img
-                                    src="#"
-                                    alt="Image Preview"
-                                    className="hidden mt-2 rounded-md max-h-40"
-                                />
+                                {previewImage && (
+                                    <img
+                                        src={previewImage}
+                                        alt="Image Preview"
+                                        className="mt-2 rounded-md max-h-40"
+                                    />
+                                )}
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
+                                {/* Field List */}
+                                <div>
+                                    <div className="flex justify-between items-center mb-2">
+                                        <label className="form-label">
+                                            Field
+                                        </label>
+                                        <button
+                                            onClick={addFieldDropdown}
+                                            type="button"
+                                            className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                                        >
+                                            Add Field
+                                        </button>
+                                    </div>
+                                    <select
+                                        name="staffEquipment"
+                                        className="mt-2 mb-2 form-control p-2 rounded-md w-full text-gray-500"
+                                    >
+                                        <option>Select Field Id</option>
+                                    </select>
+                                    {additionalFields.map((_, index) => (
+                                        <>
+                                            <div key={index} className={'flex'}>
+                                                <div className={'w-[200px]'}>
+                                                    <select
+                                                        value={selectedCrop?.field_list[index]}
+                                                        onChange={(e) => {
+                                                            setSelectedFieldId(index, e)
+                                                        }}
+                                                        key={index}
+                                                        className="mt-2 mb-2 form-control p-2 rounded-md w-full text-gray-500"
+                                                    >
+                                                        {fieldIds.map((e) => (
+                                                            <option key={e} value={e}>{e}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <button
+                                                        key={index}
+                                                        onClick={(e) => {
+                                                            removeFieldIdSelector(index, e)
+                                                        }}
+                                                        className={'mt-2 ml-4 h-[40px] w-[70px] bg-green-500 text-white rounded-md hover:bg-red-500'}>Remove
+                                                    </button>
+                                                </div>
+
+
+                                            </div>
+                                        </>
+                                    ))}
+                                </div>
+                                <div>
+
+                                </div>
+
                             </div>
                         </form>
                     </div>

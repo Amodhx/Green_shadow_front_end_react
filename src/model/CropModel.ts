@@ -2,7 +2,7 @@ class CropModel {
     crop_id:string
     crop_common_name:string
     crop_scientific_name:string
-    crop_image:string
+    crop_image:File | null;
     category:string
     season:string
     field_list:string[]
@@ -13,7 +13,7 @@ class CropModel {
     }
 
 
-    constructor(crop_id: string, crop_common_name: string, crop_scientific_name: string, crop_image: string, category: string, season: string, field_list: string[], log_list: string[]) {
+    constructor(crop_id: string, crop_common_name: string, crop_scientific_name: string, crop_image: File | null, category: string, season: string, field_list: string[], log_list: string[]) {
         this.crop_id = crop_id;
         this.crop_common_name = crop_common_name;
         this.crop_scientific_name = crop_scientific_name;
