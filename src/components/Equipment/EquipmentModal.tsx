@@ -76,7 +76,7 @@ function EquipmentModal({
     const [equipment_count,set_equipment_count] = useState('')
     const [equipment_status,set_equipment_status] = useState('')
     const [additionalStaff, setAdditionalStaff] = useState<string[]>([]);
-    const [additionalFields, setAdditionalFields] = useState<string[]>([]);
+    let [additionalFields, setAdditionalFields] = useState<string[]>([]);
 
     const addStaffDropdown = () => {
         setAdditionalStaff([...additionalStaff, '']);
@@ -97,7 +97,7 @@ function EquipmentModal({
     function removeStaffIdSelector(index:number,event:any){
         event.preventDefault()
         const updatedStaff = [...additionalStaff];
-        updatedStaff.splice(index, 1);  //Modify the copy
+        updatedStaff.splice(index, 1);
         setAdditionalStaff(updatedStaff);
     }
     function removeFieldIdSelector(index:number,event:any){
@@ -105,6 +105,7 @@ function EquipmentModal({
         const updatedFields = [...additionalFields]
         updatedFields.splice(index,1)
         setAdditionalFields(updatedFields);
+        setAdditionalFields(updatedFields)
     }
     return (
         <>
@@ -283,8 +284,8 @@ function EquipmentModal({
                                                             key={index}
                                                             className="mt-2 mb-2 form-control p-2 rounded-md w-full text-gray-500"
                                                         >
-                                                            {fieldIds.map((e) => (
-                                                                <option key={e} value={e}>{e}</option>
+                                                            {fieldIds.map((e,index) => (
+                                                                <option key={e} value={additionalFields[index]}>{e}</option>
                                                             ))}
                                                         </select>
                                                     </div>

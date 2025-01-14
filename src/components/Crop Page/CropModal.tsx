@@ -122,7 +122,7 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
                                         onChange={(e)=>{
                                             set_crop_common_name(e.target.value);
                                         }}
-                                        value={selectedCrop?.crop_common_name}
+                                        value={crop_common_name}
                                         type="text"
                                         placeholder="Crop Common Name"
                                         className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -135,7 +135,7 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
                                         onChange={(e) =>{
                                             set_crop_scientific_name(e.target.value);
                                         }}
-                                        value={selectedCrop?.crop_scientific_name}
+                                        value={crop_scientific_name}
                                         type="text"
                                         placeholder="Crop Scientific Name"
                                         className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -152,7 +152,7 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
                                         onChange={(e)=>{
                                             set_category(e.target.value);
                                         }}
-                                        value={selectedCrop?.category}
+                                        value={category}
                                         type="text"
                                         placeholder="Crop Category"
                                         className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -165,7 +165,7 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
                                         onChange={(e)=>{
                                             set_season(e.target.value)
                                         }}
-                                        value={selectedCrop?.season}
+                                        value={season}
                                         type="text"
                                         placeholder="Crop Season"
                                         className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -219,7 +219,7 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
                                             <div key={index} className={'flex'}>
                                                 <div className={'w-[200px]'}>
                                                     <select
-                                                        value={selectedCrop?.field_list[index]}
+                                                        value={additionalFields[index]}
                                                         onChange={(e) => {
                                                             setSelectedFieldId(index, e)
                                                         }}
