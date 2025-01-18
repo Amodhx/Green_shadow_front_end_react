@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
 import Swal from "sweetalert2";
 import ModalButton from "../ModalButton.tsx";
+import {addField, updateField} from "../../slices/FieldSlice.ts";
 
 function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedField : FieldModel | null}) {
     const [cropIds,setCropIds] = useState<string[]>(['Select Crop Id']);
@@ -20,7 +21,7 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
     const [field_name,setField_name] = useState<string>('')
     const [field_location,setField_location] = useState<string>('')
     const [extent_size,setExtent_size] = useState<string>('')
-    const [field_imae,set_field_image] = useState<string | null>(null);
+    const [field_image,set_field_image] = useState<string | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +61,7 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
         updatedStaff.splice(index,1)
         setAdditionalStaffs(updatedStaff);
     }
-    function removeEquipementIdSelector(index:number,event:any){
+    function removeEquipmentIdSelector(index:number,event:any){
         event.preventDefault()
         const updatedCrop = [...additionalCrops]
         updatedCrop.splice(index,1)
@@ -100,10 +101,9 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
     }, []);
 
     function onSubmitClick(){
-        // const crop = new CropModel('1',crop_common_name,crop_scientific_name,crop_image,category,season,additionalFields,[])
-
+        const field = new FieldModel('1',field_name,field_location,extent_size,additionalStaffs,additionalCrops,field_image,[],additionalEquipments);
         if (selectedField){
-            // crop.setCropId(selectedCrop.crop_id)
+            field.setFieldId(selectedField.field_id);
             Swal.fire({
                 title: "Do you want to Update the changes?",
                 showDenyButton: true,
@@ -112,14 +112,14 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
                 denyButtonText: `Don't save`
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // dispatch(updateCrop(crop.toPlainObject()))
+                    dispatch(updateField(field.toPlainObject()))
                     Swal.fire("Saved!", "", "success");
                 } else if (result.isDenied) {
                     Swal.fire("Changes are not saved", "", "info");
                 }
             });
         }else {
-            // dispatch(addCrop(crop.toPlainObject()));
+            dispatch(addField(field.toPlainObject()))
             Swal.fire({
                 title: "Saved!",
                 icon: "success",
@@ -356,7 +356,7 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
                                                     <button
                                                         key={index}
                                                         onClick={(e) => {
-                                                            removeEquipementIdSelector(index, e)
+                                                            removeEquipmentIdSelector(index, e)
                                                         }}
                                                         className={'mt-2 ml-4 h-[40px] w-[70px] bg-green-500 text-white rounded-md hover:bg-red-500'}>Remove
                                                     </button>
