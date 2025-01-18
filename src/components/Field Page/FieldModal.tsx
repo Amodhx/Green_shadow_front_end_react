@@ -92,7 +92,7 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
             setField_name(selectedField.field_name)
             setField_location(selectedField.filed_location)
             setExtent_size(selectedField.extent_size)
-
+            set_field_image(selectedField.field_image)
             setAdditionalEquipments(selectedField.equipment_list)
             setAdditionalCrops(selectedField.crops_list)
             setAdditionalStaffs(selectedField.staff_list)
@@ -157,7 +157,7 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
                                         }}
                                         value={field_name}
                                         type="text"
-                                        placeholder="Crop Common Name"
+                                        placeholder="Field Name"
                                         className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                                         required
                                     />
@@ -170,7 +170,7 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
                                         }}
                                         value={field_location}
                                         type="text"
-                                        placeholder="Crop Scientific Name"
+                                        placeholder="Field Location"
                                         className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                                         required
                                     />
@@ -186,7 +186,7 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
                                         }}
                                         value={extent_size}
                                         type="text"
-                                        placeholder="Crop Category"
+                                        placeholder="Extent Size"
                                         className="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                                         required
                                     />
