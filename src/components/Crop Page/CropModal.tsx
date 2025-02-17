@@ -2,18 +2,19 @@ import ModalButton from "../ModalButton.tsx";
 import React, {useEffect, useState} from "react";
 import CropModel from "../../model/CropModel.ts";
 import {useDispatch} from "react-redux";
-import {addCrop, updateCrop} from "../../slices/CropSlice.ts";
+import {saveCrop, updateCrop} from "../../slices/CropSlice.ts";
 import Swal from "sweetalert2";
+import {AppDispatch} from "../../store/Store.ts";
 
 function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCrop:CropModel | null}) {
     const [fieldIds,setFieldIds] = useState<string[]>(['Select Field Id'])
     const [additionalFields,setAdditionalFields] = useState<string[]>([])
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const [buttonText,setButtonText] = useState('Save Crop')
 
     const [crop_common_name ,set_crop_common_name ] = useState('')
     const [crop_scientific_name ,set_crop_scientific_name] = useState('')
-    const [crop_image,set_crop_image] = useState<string | null>(null);
+    const [crop_image,set_crop_image] = useState<File | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [category,set_category] = useState('')
     const [season,set_season] = useState('')
@@ -25,15 +26,20 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64String = reader.result as string;
-                set_crop_image(base64String);
+                // set_crop_image(base64String);
+                set_crop_image(file)
                 setPreviewImage(base64String)
             };
 
             reader.readAsDataURL(file);
         }
     };
-    function settingPreviewImage(img:string | null){
-        setPreviewImage(img)
+    async function settingPreviewImage(img:File | null){
+        if (img != null){
+            const imgString = await fileToBase64(img);
+            setPreviewImage(imgString)
+        }
+
     }
 
     const addFieldDropdown = ()=>{
@@ -52,6 +58,14 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
         updatedField[index] = e.target.value;
         setAdditionalFields(updatedField)
     }
+    const fileToBase64 = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = (error) => reject(error);
+        });
+    };
     useEffect(() => {
         setFieldIds([...fieldIds,'F001','F002'])
         if (selectedCrop){
@@ -85,7 +99,8 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
                 }
             });
         }else {
-            dispatch(addCrop(crop.toPlainObject()));
+            console.log("CROP:  "+crop.crop_image)
+            dispatch(saveCrop(crop))
             Swal.fire({
                 title: "Saved!",
                 icon: "success",

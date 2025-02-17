@@ -16,6 +16,28 @@ export const getCrops = createAsyncThunk(
         }
     }
 )
+export const saveCrop = createAsyncThunk(
+    'crops/saveCrop',
+    async (crop : CropModel, { rejectWithValue }) =>{
+        try {
+            const formData = new FormData();
+            formData.append("crop_code", crop.crop_id);
+            formData.append("crop_common_name", crop.crop_common_name);
+            formData.append("crop_scientific_name", crop.crop_scientific_name);
+            formData.append("category", crop.category);
+            formData.append("season", crop.season);
+            formData.append("field_code_list", crop.field_list.join(",")); // Convert array to comma-separated string
+            if (crop.crop_image){
+                formData.append("crop_image", crop.crop_image);
+            }
+
+            const response : any = await Api_call.postApiCallWithFromData('/crop/saveCrop',formData)
+            return response.data;
+        }catch (err){
+            return rejectWithValue(err);
+        }
+    }
+)
 const cropSlice = createSlice({
     name : 'crops',
     initialState : initialCrops,
@@ -44,6 +66,17 @@ const cropSlice = createSlice({
             })
             .addCase(getCrops.rejected,(state,action) =>{
                 console.error("Failed to get crops: ",state,action.payload);
+            });
+        builder
+            .addCase(saveCrop.fulfilled, (state,action)=>{
+                console.log(state)
+                state.push(action.payload);
+            })
+            .addCase(saveCrop.pending, (state,action)=>{
+                console.log("PENDING get Crops: ",state,action.payload);
+            })
+            .addCase(saveCrop.rejected, (state,action)=>{
+                console.error("Failed to get Crops: ",state,action.payload);
             })
     }
 })

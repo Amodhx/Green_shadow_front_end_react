@@ -8,6 +8,18 @@ class ApiCall{
         baseURL : this.baseUrl
     })
 
+    async postApiCallWithFromData(url: string, data: any){
+        try {
+            const token = localStorage.getItem("token")
+            return await this.api.post(url, data,{
+                headers : {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+        }catch (err){
+            return err;
+        }
+    }
     async postApiCall(url:string,data:any){
         try {
             return await this.api.post(url, data);
