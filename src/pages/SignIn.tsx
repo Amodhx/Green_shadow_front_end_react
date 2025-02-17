@@ -4,13 +4,10 @@ import {useNavigate} from "react-router";
 import {useState} from "react";
 import UserModel from "../model/UserModel.ts";
 import Api_call from "../services/api.call.ts";
-import {useDispatch} from "react-redux";
-import {setToken} from "../slices/TokenSlice.ts";
 import Swal from "sweetalert2";
 
 function SignIn(){
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const [userName,setUserName] = useState("");
     const [password,setPassword] = useState("")
     async function signInBtnClick(){
@@ -19,7 +16,7 @@ function SignIn(){
         const model = new UserModel('',userName,password,'')
         const response:any = await Api_call.postApiCall('/auth/signIn', model);
         if (response.status === 201) {
-            dispatch(setToken(response.data));
+            localStorage.setItem('token',response.data);
             navigate("/window");
         } else if (response.status === 400) {
             Swal.fire({

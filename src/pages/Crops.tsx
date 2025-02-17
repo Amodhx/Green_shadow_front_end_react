@@ -1,13 +1,20 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import AddNewButton from "../components/AddNewButton.tsx";
 import CropCard from "../components/Crop Page/CropCard.tsx";
 import CropModal from "../components/Crop Page/CropModal.tsx";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import CropModel from "../model/CropModel.ts";
+import {AppDispatch, RootState} from "../store/Store.ts";
+import {getCrops} from "../slices/CropSlice.ts";
 
 function Crops(){
-
-    const crops : CropModel[] = useSelector((state : any) => state.crops);
+    useEffect(() => {
+        if (crops.length === 0){
+            dispatch(getCrops());
+        }
+    }, []);
+    const dispatch = useDispatch<AppDispatch>();
+    const crops : CropModel[] = useSelector((state : RootState) => state.crops);
     const [isModalShow, setIsModalShow] = useState(false)
     const openModal = () => setIsModalShow(true);
     const closeModal = () => setIsModalShow(false);
@@ -21,7 +28,7 @@ function Crops(){
             </div>
             <div className="grid grid-cols-4 gap-5 p-5">
                 {crops.map((crop) =>(
-                    <CropCard crop={crop}/>
+                    <CropCard key = {Math.random()}  crop={crop}/>
                 ))}
             </div>
 

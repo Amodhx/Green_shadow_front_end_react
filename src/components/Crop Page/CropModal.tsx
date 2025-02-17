@@ -37,7 +37,7 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
     }
 
     const addFieldDropdown = ()=>{
-        setAdditionalFields([...additionalFields,'']);
+        setAdditionalFields([...additionalFields,'qe']);
     }
 
     function removeFieldIdSelector(index:number,event:any){
@@ -214,7 +214,7 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
                                     >
                                         <option>Select Field Id</option>
                                     </select>
-                                    {additionalFields.map((_, index) => (
+                                    {additionalFields != undefined && additionalFields.map((_, index) => (
                                         <>
                                             <div key={index} className={'flex'}>
                                                 <div className={'w-[200px]'}>

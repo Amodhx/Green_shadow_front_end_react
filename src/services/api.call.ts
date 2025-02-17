@@ -3,6 +3,7 @@ import axios from 'axios'
 class ApiCall{
     baseUrl: string = "http://localhost:3000/api/v1"
 
+
      api = axios.create({
         baseURL : this.baseUrl
     })
@@ -21,8 +22,17 @@ class ApiCall{
     async deleteApiCall(){
 
     }
-    async getApiCall(){
-
+    async getApiCall(url:string){
+        try {
+            const token = localStorage.getItem("token")
+            return await this.api.get(url,{
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            });
+        }catch (err){
+            return err;
+        }
     }
 }
 const Api_call = new ApiCall();
