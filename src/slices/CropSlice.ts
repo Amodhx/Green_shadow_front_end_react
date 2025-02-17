@@ -16,12 +16,36 @@ export const getCrops = createAsyncThunk(
         }
     }
 )
+export const updateCrop = createAsyncThunk(
+    'crops/updateCrop',
+    async (crop:CropModel,{rejectWithValue})=>{
+        try {
+            const formData = new FormData();
+            formData.append("crop_code", crop.crop_code);
+            formData.append("crop_common_name", crop.crop_common_name);
+            formData.append("crop_scientific_name", crop.crop_scientific_name);
+            formData.append("category", crop.category);
+            formData.append("season", crop.season);
+            formData.append("field_code_list", crop.field_list.join(",")); // Convert array to comma-separated string
+            if (crop.crop_image){
+                console.log(typeof crop.crop_image);
+                formData.append("crop_image", crop.crop_image);
+            }
+            const response:any = await Api_call.patchApiCallWithFormData('/crop/updateCrop',formData)
+            console.log(response)
+            return response.data;
+        }catch (err){
+            console.log(err);
+            return rejectWithValue(err);
+        }
+    }
+)
 export const saveCrop = createAsyncThunk(
     'crops/saveCrop',
     async (crop : CropModel, { rejectWithValue }) =>{
         try {
             const formData = new FormData();
-            formData.append("crop_code", crop.crop_id);
+            formData.append("crop_code", crop.crop_code);
             formData.append("crop_common_name", crop.crop_common_name);
             formData.append("crop_scientific_name", crop.crop_scientific_name);
             formData.append("category", crop.category);
@@ -41,20 +65,7 @@ export const saveCrop = createAsyncThunk(
 const cropSlice = createSlice({
     name : 'crops',
     initialState : initialCrops,
-    reducers :{
-        addCrop: (state, action) => {
-            state.push(action.payload);
-        },
-        updateCrop: (state, action) => {
-            const index = state.findIndex(crop => crop.crop_id === action.payload.crop_id);
-            if (index !== -1) {
-                state[index] = { ...state[index], ...action.payload };
-            }
-        },
-        deleteCrop: (state, action) => {
-            return state.filter(crop => crop.crop_id !== action.payload.crop_id);
-        }
-    },
+    reducers :{},
     extraReducers : (builder) =>{
         builder
             .addCase(getCrops.fulfilled, (state,action)=>{
@@ -73,13 +84,25 @@ const cropSlice = createSlice({
                 state.push(action.payload);
             })
             .addCase(saveCrop.pending, (state,action)=>{
-                console.log("PENDING get Crops: ",state,action.payload);
+                console.log("PENDING save Crops: ",state,action.payload);
             })
             .addCase(saveCrop.rejected, (state,action)=>{
-                console.error("Failed to get Crops: ",state,action.payload);
+                console.error("Failed to save Crops: ",state,action.payload);
+            });
+        builder
+            .addCase(updateCrop.pending,(state,action)=>{
+                console.log("PENDING update Crops: ",state,action.payload);
+            })
+            .addCase(updateCrop.rejected,(state,action)=>{
+                console.error("Failed to update Crops: ",state,action.payload);
+            })
+            .addCase(updateCrop.fulfilled,(state, action) =>{
+                let updatedCrop:CropModel = action.payload;
+                const index = state.findIndex((crop) => crop.crop_code === updatedCrop.crop_code);
+                if (index !== -1) {
+                    state[index] = updatedCrop;
+                }
             })
     }
 })
-
-export const {addCrop, updateCrop, deleteCrop} = cropSlice.actions;
 export default cropSlice.reducer;

@@ -1,5 +1,5 @@
 class CropModel {
-    crop_id:string
+    crop_code:string
     crop_common_name:string
     crop_scientific_name:string
     crop_image:File | null;
@@ -9,12 +9,12 @@ class CropModel {
     log_list:string[]
 
     setCropId(id:string):void{
-        this.crop_id = id;
+        this.crop_code = id;
     }
 
 
     constructor(crop_id: string, crop_common_name: string, crop_scientific_name: string, crop_image: File |null, category: string, season: string, field_list: string[], log_list: string[]) {
-        this.crop_id = crop_id;
+        this.crop_code = crop_id;
         this.crop_common_name = crop_common_name;
         this.crop_scientific_name = crop_scientific_name;
         this.crop_image = crop_image;
@@ -25,7 +25,7 @@ class CropModel {
     }
     toPlainObject() {
         return {
-            crop_id : this.crop_id,
+            crop_code : this.crop_code,
             crop_common_name: this.crop_common_name,
             crop_scientific_name: this.crop_scientific_name,
             crop_image: this.crop_image,

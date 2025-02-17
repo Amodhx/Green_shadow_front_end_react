@@ -34,13 +34,13 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
             reader.readAsDataURL(file);
         }
     };
-    async function settingPreviewImage(img:File | null){
-        if (img != null){
-            const imgString = await fileToBase64(img);
-            setPreviewImage(imgString)
-        }
-
-    }
+    // async function settingPreviewImage(img:File | null){
+    //     if (img != null){
+    //         const imgString = await fileToBase64(img);
+    //         setPreviewImage(imgString)
+    //     }
+    //
+    // }
 
     const addFieldDropdown = ()=>{
         setAdditionalFields([...additionalFields,'qe']);
@@ -58,14 +58,6 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
         updatedField[index] = e.target.value;
         setAdditionalFields(updatedField)
     }
-    const fileToBase64 = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = (error) => reject(error);
-        });
-    };
     useEffect(() => {
         setFieldIds([...fieldIds,'F001','F002'])
         if (selectedCrop){
@@ -75,15 +67,37 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
             set_crop_image(selectedCrop.crop_image)
             set_category(selectedCrop.category)
             set_season(selectedCrop.season)
-            setAdditionalFields(selectedCrop.field_list)
-            settingPreviewImage(selectedCrop.crop_image)
+            if (selectedCrop.field_list != undefined) {
+                setAdditionalFields(selectedCrop.field_list)
+            }
+            // settingPreviewImage(selectedCrop.crop_image)
         }
     }, []);
+
+    function base64ToFile(base64: string): File {
+        const fileName = "image.png";
+        const fileType = "image/png";
+        const base64Data = base64.includes('base64,') ? base64.split(',')[1] : base64;
+        if (!/^[A-Za-z0-9+/=]+$/.test(base64Data)) {
+            throw new Error("Invalid base64 string");
+        }
+        const byteCharacters = atob(base64Data);
+        const byteArrays = [];
+        for (let offset = 0; offset < byteCharacters.length; offset++) {
+            byteArrays.push(byteCharacters.charCodeAt(offset));
+        }
+        const byteArray = new Uint8Array(byteArrays);
+        const file = new File([byteArray], fileName, { type: fileType });
+
+        return file;
+    }
     function onSubmitClick(){
-        const crop = new CropModel('1',crop_common_name,crop_scientific_name,crop_image,category,season,additionalFields,[])
+        let crop = new CropModel('1',crop_common_name,crop_scientific_name,crop_image,category,season,additionalFields,[])
 
         if (selectedCrop){
-            crop.setCropId(selectedCrop.crop_id)
+            // @ts-ignore
+            crop.crop_image = base64ToFile(crop.crop_image as string)
+            crop.setCropId(selectedCrop.crop_code)
             Swal.fire({
                 title: "Do you want to Update the changes?",
                 showDenyButton: true,
@@ -92,14 +106,13 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
                 denyButtonText: `Don't save`
             }).then((result) => {
                 if (result.isConfirmed) {
-                    dispatch(updateCrop(crop.toPlainObject()))
+                    dispatch(updateCrop(crop))
                     Swal.fire("Saved!", "", "success");
                 } else if (result.isDenied) {
                     Swal.fire("Changes are not saved", "", "info");
                 }
             });
         }else {
-            console.log("CROP:  "+crop.crop_image)
             dispatch(saveCrop(crop))
             Swal.fire({
                 title: "Saved!",

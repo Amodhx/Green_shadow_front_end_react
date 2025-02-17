@@ -3,14 +3,21 @@ import {useState} from "react";
 import CropModel from "../../model/CropModel.ts";
 import CropModal from "./CropModal.tsx";
 import {useDispatch} from "react-redux";
-import {deleteCrop} from "../../slices/CropSlice.ts";
 import Swal from "sweetalert2";
 function CropCard({crop}: {crop: CropModel}) {
     const [selectedCrop, setSelectedCrop] = useState<CropModel | null>(null)
     const dispatch = useDispatch();
-    function onUpdateClick(){
-        setSelectedCrop(crop);
+    async function onUpdateClick(){
+        const cropDataToUpdate =new CropModel(crop.crop_code,crop.crop_common_name,crop.crop_scientific_name,
+            crop.crop_image,
+            crop.category,
+            crop.season,
+            crop.field_list,
+            []);
+        setSelectedCrop(cropDataToUpdate);
     }
+
+
     function onDeleteClick(){
         if (crop){
             Swal.fire({
@@ -23,7 +30,7 @@ function CropCard({crop}: {crop: CropModel}) {
                 confirmButtonText: "Yes, delete it!"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    dispatch(deleteCrop(crop))
+                    // dispatch(deleteCrop(crop))
                     Swal.fire({
                         title: "Deleted!",
                         text: "Your file has been deleted.",

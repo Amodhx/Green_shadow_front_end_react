@@ -20,6 +20,18 @@ class ApiCall{
             return err;
         }
     }
+    async patchApiCallWithFormData(url:string,data:FormData){
+        try {
+            const token = localStorage.getItem("token")
+            return await this.api.patch(url, data,{
+                headers : {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+        }catch (err){
+            return err;
+        }
+    }
     async postApiCall(url:string,data:any){
         try {
             return await this.api.post(url, data);
@@ -28,7 +40,8 @@ class ApiCall{
             return err;
         }
     }
-    async putApiCall(){
+
+    async patchApiCall(){
 
     }
     async deleteApiCall(){

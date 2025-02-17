@@ -28,7 +28,7 @@ function Crops(){
             </div>
             <div className="grid grid-cols-4 gap-5 p-5">
                 {crops.map((crop) =>(
-                    <CropCard key = {Math.random()}  crop={crop}/>
+                    <CropCard key = {crop.crop_code}  crop={crop}/>
                 ))}
             </div>
 
