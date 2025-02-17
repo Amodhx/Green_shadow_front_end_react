@@ -44,8 +44,20 @@ class ApiCall{
     async patchApiCall(){
 
     }
-    async deleteApiCall(){
-
+    async deleteApiCall(url:string,id:string){
+        try {
+            const token = localStorage.getItem("token")
+            return await this.api.delete(url,{
+                params:{
+                    id : id
+                },
+                headers : {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+        }catch (err){
+            return err;
+        }
     }
     async getApiCall(url:string){
         try {

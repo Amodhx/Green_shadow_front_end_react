@@ -16,6 +16,17 @@ export const getCrops = createAsyncThunk(
         }
     }
 )
+export const deleteCrop = createAsyncThunk(
+    'crops/deleteCrop',
+    async (crop:CropModel,{rejectWithValue} )=>{
+        try {
+            const response:any = await Api_call.deleteApiCall('/crop/deleteCrop',crop.crop_code);
+            return response.data;
+        }catch (err){
+            return rejectWithValue(err)
+        }
+    }
+)
 export const updateCrop = createAsyncThunk(
     'crops/updateCrop',
     async (crop:CropModel,{rejectWithValue})=>{
@@ -102,6 +113,17 @@ const cropSlice = createSlice({
                 if (index !== -1) {
                     state[index] = updatedCrop;
                 }
+            });
+        builder
+            .addCase(deleteCrop.pending,(state, action)=>{
+                console.log("PENDING Delete Crops: ",state,action.payload);
+            })
+            .addCase(deleteCrop.rejected,(state, action)=>{
+                console.error("Failed to delete Crops: ",state,action.payload);
+            })
+            .addCase(deleteCrop.fulfilled,(state, action)=>{
+                state = state.filter(crop => crop.crop_code !== action.payload.crop_code);
+                return state;
             })
     }
 })
