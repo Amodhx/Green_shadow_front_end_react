@@ -3,7 +3,9 @@ import React, {useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
 import Swal from "sweetalert2";
 import ModalButton from "../ModalButton.tsx";
-import {addField, updateField} from "../../slices/FieldSlice.ts";
+import {saveField, updateField} from "../../slices/FieldSlice.ts";
+import {AppDispatch} from "../../store/Store.ts";
+import Img_convert from "../../services/image.converter.ts";
 
 function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedField : FieldModel | null}) {
     const [cropIds,setCropIds] = useState<string[]>(['Select Crop Id']);
@@ -15,13 +17,13 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
     const [equipmentIds,setEquipmentIds] = useState<string[]>(['Select Equipment Id']);
     const [additionalEquipments,setAdditionalEquipments] = useState<string[]>([]);
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const [buttonText,setButtonText] = useState('Save Field')
 
     const [field_name,setField_name] = useState<string>('')
     const [field_location,setField_location] = useState<string>('')
     const [extent_size,setExtent_size] = useState<string>('')
-    const [field_image,set_field_image] = useState<string | null>(null);
+    const [field_image,set_field_image] = useState<File | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,16 +32,13 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64String = reader.result as string;
-                set_field_image(base64String);
+                set_field_image(file);
                 setPreviewImage(base64String)
             };
 
             reader.readAsDataURL(file);
         }
     };
-    function settingPreviewImage(img:string | null){
-        setPreviewImage(img)
-    }
     const addCropsDropdown = ()=>{
         setAdditionalCrops([...additionalCrops,'']);
     }
@@ -90,20 +89,22 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
         if (selectedField){
             setButtonText('Update Field')
             setField_name(selectedField.field_name)
-            setField_location(selectedField.filed_location)
+            setField_location(selectedField.field_location)
             setExtent_size(selectedField.extent_size)
             set_field_image(selectedField.field_image)
             setAdditionalEquipments(selectedField.equipment_list)
             setAdditionalCrops(selectedField.crops_list)
             setAdditionalStaffs(selectedField.staff_list)
-            settingPreviewImage(selectedField.field_image)
+            // settingPreviewImage(selectedField.field_image)
         }
     }, []);
 
-    function onSubmitClick(){
+    async function onSubmitClick(){
         const field = new FieldModel('1',field_name,field_location,extent_size,additionalStaffs,additionalCrops,field_image,[],additionalEquipments);
         if (selectedField){
-            field.setFieldId(selectedField.field_id);
+            // @ts-ignore
+            field.field_image = await Img_convert.base64ToFile(field.field_image as string)
+            field.setFieldId(selectedField.field_code);
             Swal.fire({
                 title: "Do you want to Update the changes?",
                 showDenyButton: true,
@@ -112,14 +113,14 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
                 denyButtonText: `Don't save`
             }).then((result) => {
                 if (result.isConfirmed) {
-                    dispatch(updateField(field.toPlainObject()))
+                    dispatch(updateField(field))
                     Swal.fire("Saved!", "", "success");
                 } else if (result.isDenied) {
                     Swal.fire("Changes are not saved", "", "info");
                 }
             });
         }else {
-            dispatch(addField(field.toPlainObject()))
+            dispatch(saveField(field))
             Swal.fire({
                 title: "Saved!",
                 icon: "success",
@@ -211,7 +212,7 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
                                     >
                                         <option>Select Crop Id</option>
                                     </select>
-                                    {additionalCrops.map((_, index) => (
+                                    {additionalCrops != undefined && additionalCrops.map((_, index) => (
                                         <>
                                             <div key={index} className={'flex'}>
                                                 <div className={'w-[200px]'}>
@@ -284,7 +285,7 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
                                     >
                                         <option>Select Staff Id</option>
                                     </select>
-                                    {additionalStaffs.map((_, index) => (
+                                    {additionalStaffs != undefined && additionalStaffs.map((_, index) => (
                                         <>
                                             <div key={index} className={'flex'}>
                                                 <div className={'w-[200px]'}>
@@ -335,7 +336,7 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
                                     >
                                         <option>Select Equipment Id</option>
                                     </select>
-                                    {additionalEquipments.map((_, index) => (
+                                    {additionalEquipments != undefined && additionalEquipments.map((_, index) => (
                                         <>
                                             <div key={index} className={'flex'}>
                                                 <div className={'w-[200px]'}>

@@ -5,6 +5,7 @@ import {useDispatch} from "react-redux";
 import {saveCrop, updateCrop} from "../../slices/CropSlice.ts";
 import Swal from "sweetalert2";
 import {AppDispatch} from "../../store/Store.ts";
+import Img_convert from "../../services/image.converter.ts";
 
 function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCrop:CropModel | null}) {
     const [fieldIds,setFieldIds] = useState<string[]>(['Select Field Id'])
@@ -26,7 +27,6 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64String = reader.result as string;
-                // set_crop_image(base64String);
                 set_crop_image(file)
                 setPreviewImage(base64String)
             };
@@ -73,30 +73,12 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
             // settingPreviewImage(selectedCrop.crop_image)
         }
     }, []);
-
-    function base64ToFile(base64: string): File {
-        const fileName = "image.png";
-        const fileType = "image/png";
-        const base64Data = base64.includes('base64,') ? base64.split(',')[1] : base64;
-        if (!/^[A-Za-z0-9+/=]+$/.test(base64Data)) {
-            throw new Error("Invalid base64 string");
-        }
-        const byteCharacters = atob(base64Data);
-        const byteArrays = [];
-        for (let offset = 0; offset < byteCharacters.length; offset++) {
-            byteArrays.push(byteCharacters.charCodeAt(offset));
-        }
-        const byteArray = new Uint8Array(byteArrays);
-        const file = new File([byteArray], fileName, { type: fileType });
-
-        return file;
-    }
-    function onSubmitClick(){
+    async function onSubmitClick(){
         let crop = new CropModel('1',crop_common_name,crop_scientific_name,crop_image,category,season,additionalFields,[])
 
         if (selectedCrop){
             // @ts-ignore
-            crop.crop_image = base64ToFile(crop.crop_image as string)
+            crop.crop_image = await Img_convert.base64ToFile(crop.crop_image as string)
             crop.setCropId(selectedCrop.crop_code)
             Swal.fire({
                 title: "Do you want to Update the changes?",

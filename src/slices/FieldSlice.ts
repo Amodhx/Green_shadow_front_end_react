@@ -11,7 +11,7 @@ export const saveField = createAsyncThunk(
             const formData = new FormData();
             formData.append("field_code",field.field_code)
             formData.append("field_name",field.field_name)
-            formData.append("field_location",field.filed_location)
+            formData.append("field_location",field.field_location)
             formData.append("extent_size",field.extent_size)
             formData.append("staff_list",field.staff_list.join(","))
             formData.append("crop_list",field.crops_list.join(","))
@@ -32,16 +32,33 @@ export const updateField = createAsyncThunk(
     async (field:FieldModel,{rejectWithValue})=>{
         try {
             const formData = new FormData();
+            console.log("FIELD CODE: : " +field.field_code)
             formData.append("field_code",field.field_code)
             formData.append("field_name",field.field_name)
-            formData.append("field_location",field.filed_location)
+            formData.append("field_location",field.field_location)
             formData.append("extent_size",field.extent_size)
-            formData.append("staff_list",field.staff_list.join(","))
-            formData.append("crop_list",field.crops_list.join(","))
+
+
             if (field.field_image){
                 formData.append("field_image",field.field_image);
             }
-            formData.append("equipments_list",field.equipment_list.join(","))
+            if (field.staff_list != undefined){
+                formData.append("staff_list",field.staff_list.join(","))
+            }else {
+                formData.append("staff_list","")
+            }
+            if (field.crops_list != undefined){
+                formData.append("crop_list",field.crops_list.join(","))
+            }else {
+                formData.append("crop_list","")
+            }
+            if (field.equipment_list != undefined){
+                formData.append("equipments_list",field.equipment_list.join(","))
+            }else {
+                formData.append("equipments_list","")
+            }
+
+
 
             const response:any = await Api_call.patchApiCallWithFormData('/field/updateField',formData)
             return response.data;

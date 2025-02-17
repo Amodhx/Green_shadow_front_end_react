@@ -1,11 +1,19 @@
 import FieldModel from "../model/FieldModel.ts";
-import {useSelector} from "react-redux";
-import {useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect, useState} from "react";
 import AddNewButton from "../components/AddNewButton.tsx";
 import FieldCard from "../components/Field Page/FieldCard.tsx";
 import FieldModal from "../components/Field Page/FieldModal.tsx";
+import {getFields} from "../slices/FieldSlice.ts";
+import {AppDispatch} from "../store/Store.ts";
 
 function Fields(){
+    const dispatch = useDispatch<AppDispatch>();
+    useEffect(() => {
+        if (fields.length === 0){
+            dispatch(getFields())
+        }
+    }, []);
     const fields : FieldModel[] = useSelector((state : any)=>state.fields);
     const [isModalShow, setIsModalShow] = useState(false)
     const openModal = () => setIsModalShow(true);
@@ -20,7 +28,7 @@ function Fields(){
             </div>
             <div className="grid grid-cols-4 gap-5 p-5">
                 {fields.map((field) => (
-                    <FieldCard field={field}/>
+                    <FieldCard key={field.field_code} field={field}/>
                 ))}
             </div>
             {isModalShow && (

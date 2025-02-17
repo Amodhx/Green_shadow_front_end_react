@@ -4,13 +4,15 @@ import Swal from "sweetalert2";
 import CardButtons from "../CardButtons.tsx";
 import FieldModal from "./FieldModal.tsx";
 import {useDispatch} from "react-redux";
+import {AppDispatch} from "../../store/Store.ts";
 import {deleteField} from "../../slices/FieldSlice.ts";
 
 function FieldCard({field} : {field: FieldModel}){
 
     const [selectedField, setSelectedField] = useState<FieldModel | null>(null)
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     function onUpdateClick(){
+        console.log(field.field_location)
         setSelectedField(field);
     }
     function onDeleteClick(){
@@ -44,14 +46,14 @@ function FieldCard({field} : {field: FieldModel}){
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                 <div className="bg-gray-800 text-white border border-gray-400 w-[310px] rounded-md overflow-hidden">
                     <img
-                        src={field.field_image || undefined}
+                        src={field.field_image ? `data:image/png;base64,${field.field_image}` : undefined}
                         alt="field Image"
                         className="w-full h-[175px] object-cover"
                     />
                     <div className="p-4">
                         <h5 className="text-lg font-bold mb-2">{field.field_name}</h5>
                         <p className="text-sm mb-2">
-                            <strong>Field Location:</strong> {field.filed_location}
+                            <strong>Field Location:</strong> {field.field_location}
                         </p>
                         <p className="text-sm mb-2">
                             <strong>Extent Size:</strong> {field.extent_size}

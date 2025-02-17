@@ -39,7 +39,6 @@ export const updateCrop = createAsyncThunk(
             formData.append("season", crop.season);
             formData.append("field_code_list", crop.field_list.join(",")); // Convert array to comma-separated string
             if (crop.crop_image){
-                console.log(typeof crop.crop_image);
                 formData.append("crop_image", crop.crop_image);
             }
             const response:any = await Api_call.patchApiCallWithFormData('/crop/updateCrop',formData)

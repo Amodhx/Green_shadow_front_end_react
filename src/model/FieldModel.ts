@@ -1,7 +1,7 @@
 class FieldModel{
     field_code:string;
     field_name:string;
-    filed_location:string;
+    field_location:string;
     extent_size : string
     staff_list : string[]
     crops_list : string[]
@@ -16,7 +16,7 @@ class FieldModel{
     constructor(field_id: string, field_name: string, filed_location: string, extent_size: string, staff_list: string[], crops_list: string[], field_image: File | null, logs_list: string[], equipment_list: string[]) {
         this.field_code = field_id;
         this.field_name = field_name;
-        this.filed_location = filed_location;
+        this.field_location = filed_location;
         this.extent_size = extent_size;
         this.staff_list = staff_list;
         this.crops_list = crops_list;
@@ -28,7 +28,7 @@ class FieldModel{
         return {
             field_id: this.field_code,
             field_name: this.field_name,
-            filed_location: this.filed_location,
+            filed_location: this.field_location,
             extent_size: this.extent_size,
             staff_list: this.staff_list,
             crops_list: this.crops_list,
