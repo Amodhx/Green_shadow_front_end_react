@@ -1,19 +1,19 @@
 class LogModel{
-    log_id: string;
+    log_code: string;
     log_date: string;
     log_description: string;
     log_type: string;
-    observe_image :string | null
+    observe_image :File | null
     fields_list : string[]
     crop_list:string[]
     staff_list:string[]
 
 
     setLogId(id:string):void{
-        this.log_id = id;
+        this.log_code = id;
     }
-    constructor(log_id: string, log_date: string, log_description: string, log_type: string, observe_image: string| null, fields_list: string[], crop_list: string[], staff_list: string[]) {
-        this.log_id = log_id;
+    constructor(log_id: string, log_date: string, log_description: string, log_type: string, observe_image: File| null, fields_list: string[], crop_list: string[], staff_list: string[]) {
+        this.log_code = log_id;
         this.log_date = log_date;
         this.log_description = log_description;
         this.log_type = log_type;
@@ -24,7 +24,7 @@ class LogModel{
     }
     toPlainObject(){
         return{
-            log_id: this.log_id,
+            log_id: this.log_code,
             log_date: this.log_date,
             log_description: this.log_description,
             log_type: this.log_type,

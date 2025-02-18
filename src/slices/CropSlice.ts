@@ -9,7 +9,6 @@ export const getCrops = createAsyncThunk(
     async () =>{
         try {
             const response:any = await Api_call.getApiCall('/crop/getAllCrops');
-            console.log(response)
             return response.data;
         }catch (err){
             console.log(err);
