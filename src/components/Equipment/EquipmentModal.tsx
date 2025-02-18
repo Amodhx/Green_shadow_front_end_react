@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import EquipmentModel from "../../model/EquipmentModel.ts";
 import {useDispatch} from "react-redux";
-import {addEquipment, updateEquipment} from "../../slices/EquipmentSlice.ts";
 import Swal from "sweetalert2";
 import ModalButton from "../ModalButton.tsx";
 
@@ -54,14 +53,14 @@ function EquipmentModal({
                 denyButtonText: `Don't save`
             }).then((result) => {
                 if (result.isConfirmed) {
-                    dispatch(updateEquipment(equipmentModel.toPlainObject()))
+                    // dispatch(updateEquipment(equipmentModel.toPlainObject()))
                     Swal.fire("Saved!", "", "success");
                 } else if (result.isDenied) {
                     Swal.fire("Changes are not saved", "", "info");
                 }
             });
         }else {
-            dispatch(addEquipment(equipmentModel.toPlainObject()));
+            // dispatch(addEquipment(equipmentModel.toPlainObject()));
             Swal.fire({
                 title: "Saved!",
                 icon: "success",

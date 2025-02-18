@@ -142,7 +142,7 @@ const logSlice = createSlice({
             })
             .addCase(updateLog.fulfilled,(state, action)=>{
                 let updatedLog:LogModel = action.payload;
-                console.log("UPDATED LOG: : : " + updateLog)
+                console.log("UPDATED LOG: : : " + updatedLog.log_type)
                 const index = state.findIndex((log) => log.log_code === updatedLog.log_code);
                 if (index !== -1){
                     state[index] = updatedLog;

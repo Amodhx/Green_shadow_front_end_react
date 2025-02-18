@@ -2,7 +2,6 @@ import EquipmentModel from "../../model/EquipmentModel.ts";
 import {useDispatch, useSelector} from "react-redux";
 import {useState} from "react";
 import EquipmentModal from "./EquipmentModal.tsx";
-import {deleteEquipment} from "../../slices/EquipmentSlice.ts";
 import Swal from "sweetalert2";
 
 function EquipmentTable(){
@@ -30,7 +29,7 @@ function EquipmentTable(){
                 confirmButtonText: "Yes, delete it!"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    dispatch(deleteEquipment(equipment))
+                    // dispatch(deleteEquipment(equipment))
                     Swal.fire({
                         title: "Deleted!",
                         text: "Your file has been deleted.",

@@ -41,8 +41,17 @@ class ApiCall{
         }
     }
 
-    async patchApiCall(){
-
+    async patchApiCall(url:string,data:any){
+        try {
+            const token = localStorage.getItem("token")
+            return await this.api.patch(url, data,{
+                headers : {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+        }catch (err){
+            return err;
+        }
     }
     async deleteApiCall(url:string,id:string){
         try {

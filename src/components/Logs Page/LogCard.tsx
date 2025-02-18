@@ -59,13 +59,14 @@ function LogCard({log} : {log:LogModel}) {
                             <strong>Log Date:</strong> {log.log_date}
                         </p>
                         <p className="text-sm mb-2">
-                            <strong>Fields :</strong> {log.log_fiedls_details.map(field => field).join(', ')}
+                            <strong>Fields :</strong> {log.log_fiedls_details ? log.log_fiedls_details.map(field => field).join(', ') : 'No Field' +
+                            ' available'}
                         </p>
                         <p className="text-sm mb-2">
-                            <strong>Crops :</strong> {log.log_crop_details.map(crop => crop).join(', ')}
+                            <strong>Crops :</strong> {log.log_crop_details ? log.log_crop_details.map(crop => crop).join(', ') : 'No Crops available'}
                         </p>
                         <p className="text-sm mb-2">
-                            <strong>Staffs :</strong> {log.log_staff_details.map(staff => staff).join(', ')}
+                            <strong>Staffs :</strong> {log.log_staff_details ? log.log_staff_details.map(staff => staff).join(', ') : 'No staff available'}
                         </p>
                         <CardButtons onUpdateCropClick={onUpdateClick} onDeleteCropClick={onDeleteClick}/>
                     </div>
