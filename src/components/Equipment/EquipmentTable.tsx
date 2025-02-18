@@ -1,13 +1,20 @@
 import EquipmentModel from "../../model/EquipmentModel.ts";
 import {useDispatch, useSelector} from "react-redux";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import EquipmentModal from "./EquipmentModal.tsx";
 import Swal from "sweetalert2";
+import {AppDispatch} from "../../store/Store.ts";
+import {deleteEquipment, getEquipments} from "../../slices/EquipmentSlice.ts";
 
 function EquipmentTable(){
+    useEffect(() => {
+        if (equipments.length ===0){
+            dispatch(getEquipments())
+        }
+    }, []);
     const equipments : EquipmentModel[] = useSelector((state : any) => state.equipments);
     const [selectedEquipment, setSelectedEquipment] = useState<EquipmentModel | null>(null);
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     function updateEquipmentDetail(equipmentId:string){
         const equipment = equipments.find((v:EquipmentModel) => v.equipment_id === equipmentId);
@@ -29,7 +36,7 @@ function EquipmentTable(){
                 confirmButtonText: "Yes, delete it!"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // dispatch(deleteEquipment(equipment))
+                    dispatch(deleteEquipment(equipment))
                     Swal.fire({
                         title: "Deleted!",
                         text: "Your file has been deleted.",

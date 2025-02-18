@@ -8,7 +8,7 @@ export const deleteEquipment = createAsyncThunk(
     'equipment/deleteEquipment',
     async (equipment:EquipmentModel,{rejectWithValue})=>{
         try {
-            const  response:any =await Api_call.deleteApiCall('',equipment.equipment_id);
+            const  response:any =await Api_call.deleteApiCall('/equipment/deleteEquipment',equipment.equipment_id);
             return  response.data;
         }catch (err){
             return rejectWithValue(err);

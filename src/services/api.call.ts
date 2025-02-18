@@ -34,7 +34,12 @@ class ApiCall{
     }
     async postApiCall(url:string,data:any){
         try {
-            return await this.api.post(url, data);
+            const token = localStorage.getItem("token")
+            return await this.api.post(url, data,{
+                headers : {
+                    Authorization :`Bearer ${token}`
+                }
+            });
         }catch (err){
             console.error("Failed to save", err);
             return err;

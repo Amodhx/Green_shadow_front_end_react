@@ -3,6 +3,8 @@ import EquipmentModel from "../../model/EquipmentModel.ts";
 import {useDispatch} from "react-redux";
 import Swal from "sweetalert2";
 import ModalButton from "../ModalButton.tsx";
+import {AppDispatch} from "../../store/Store.ts";
+import {saveEquipment, updateEquipment} from "../../slices/EquipmentSlice.ts";
 
 function EquipmentModal({
                             closeModal,
@@ -11,7 +13,7 @@ function EquipmentModal({
     closeModal: () => void;
     selectedEquipment?: EquipmentModel | null;
 }){
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
         setStaffIds([...staffIds,'S001','S002'])
@@ -36,8 +38,12 @@ function EquipmentModal({
             set_equipment_type(selectedEquipment.type)
             set_equipment_status(selectedEquipment.status)
             set_equipment_count(selectedEquipment.count)
-            setAdditionalStaff(selectedEquipment.staff_list)
-            setAdditionalFields(selectedEquipment.field_list)
+            if (selectedEquipment.staff_list != undefined){
+                setAdditionalStaff(selectedEquipment.staff_list)
+            }
+            if (selectedEquipment.field_list != undefined){
+                setAdditionalFields(selectedEquipment.field_list)
+            }
 
         }
     }, [selectedEquipment]);
@@ -53,14 +59,14 @@ function EquipmentModal({
                 denyButtonText: `Don't save`
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // dispatch(updateEquipment(equipmentModel.toPlainObject()))
+                    dispatch(updateEquipment(equipmentModel))
                     Swal.fire("Saved!", "", "success");
                 } else if (result.isDenied) {
                     Swal.fire("Changes are not saved", "", "info");
                 }
             });
         }else {
-            // dispatch(addEquipment(equipmentModel.toPlainObject()));
+            dispatch(saveEquipment(equipmentModel))
             Swal.fire({
                 title: "Saved!",
                 icon: "success",
@@ -219,7 +225,7 @@ function EquipmentModal({
                                         >
                                             <option>Select Staff Id</option>
                                         </select>
-                                        {additionalStaff.map((_, index) => (
+                                        {additionalStaff != undefined && additionalStaff.map((_, index) => (
                                             <>
                                                 <div key={index} className={'flex'}>
                                                     <div className={'w-[200px]'}>
@@ -271,7 +277,7 @@ function EquipmentModal({
                                         >
                                             <option>Select Field Id</option>
                                         </select>
-                                        {additionalFields.map((_, index) => (
+                                        {additionalFields != undefined && additionalFields.map((_, index) => (
                                             <>
                                                 <div key={index} className={'flex'}>
                                                     <div className={'w-[200px]'}>
