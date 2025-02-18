@@ -33,27 +33,27 @@ export const saveLog = createAsyncThunk(
             const formData = new FormData();
             formData.append("log_code",log.log_code)
             formData.append("log_date",log.log_date)
-            formData.append("log_description",log.log_description)
+            formData.append("log_details",log.log_details)
             formData.append("log_type",log.log_type)
             if (log.observe_image){
                 formData.append("observe_image",log.observe_image)
             }
-            if (log.fields_list != undefined){
-                formData.append("fields_list",log.fields_list.join(","))
+            if (log.log_fiedls_details != undefined){
+                formData.append("fields_list",log.log_fiedls_details.join(","))
             }else {
                 formData.append("fields_list","")
             }
-            if (log.crop_list != undefined){
-                formData.append("crop_list",log.crop_list.join(","))
+            if (log.log_crop_details != undefined){
+                formData.append("crop_list",log.log_crop_details.join(","))
             }else {
                 formData.append("crop_list","")
             }
-            if (log.staff_list != undefined){
-                formData.append("staff_list",log.staff_list.join(","))
+            if (log.log_staff_details != undefined){
+                formData.append("staff_list",log.log_staff_details.join(","))
             }else {
                 formData.append("staff_list","")
             }
-            const response : any = Api_call.postApiCallWithFromData('/log/saveLog',formData);
+            const response : any = await Api_call.postApiCallWithFromData('/log/saveLog',formData);
             return  response.data;
         }catch (err){
             return rejectWithValue(err);
@@ -67,27 +67,27 @@ export const updateLog = createAsyncThunk(
             const formData = new FormData();
             formData.append("log_code",log.log_code)
             formData.append("log_date",log.log_date)
-            formData.append("log_description",log.log_description)
+            formData.append("log_details",log.log_details)
             formData.append("log_type",log.log_type)
             if (log.observe_image){
                 formData.append("observe_image",log.observe_image)
             }
-            if (log.fields_list != undefined){
-                formData.append("fields_list",log.fields_list.join(","))
+            if (log.log_fiedls_details != undefined){
+                formData.append("fields_list",log.log_fiedls_details.join(","))
             }else {
                 formData.append("fields_list","")
             }
-            if (log.crop_list != undefined){
-                formData.append("crop_list",log.crop_list.join(","))
+            if (log.log_crop_details != undefined){
+                formData.append("crop_list",log.log_crop_details.join(","))
             }else {
                 formData.append("crop_list","")
             }
-            if (log.staff_list != undefined){
-                formData.append("staff_list",log.staff_list.join(","))
+            if (log.log_staff_details != undefined){
+                formData.append("staff_list",log.log_staff_details.join(","))
             }else {
                 formData.append("staff_list","")
             }
-            const response : any = Api_call.patchApiCallWithFormData('/log/updateLog',formData);
+            const response : any = await Api_call.patchApiCallWithFormData('/log/updateLog',formData);
             return  response.data;
         }catch (err){
             return rejectWithValue(err);
@@ -130,6 +130,7 @@ const logSlice = createSlice({
             })
             .addCase(saveLog.fulfilled,(state, action)=>{
                 console.log(state)
+                console.log("SAVED LOG DATA : : : "+action.payload)
                 state.push(action.payload);
             })
         builder
@@ -141,6 +142,7 @@ const logSlice = createSlice({
             })
             .addCase(updateLog.fulfilled,(state, action)=>{
                 let updatedLog:LogModel = action.payload;
+                console.log("UPDATED LOG: : : " + updateLog)
                 const index = state.findIndex((log) => log.log_code === updatedLog.log_code);
                 if (index !== -1){
                     state[index] = updatedLog;

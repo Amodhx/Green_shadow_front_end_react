@@ -3,10 +3,12 @@ import React, {useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
 import ModalButton from "../ModalButton.tsx";
 import Swal from "sweetalert2";
-import {addLog, updateLog} from "../../slices/LogSlice.ts";
+import {AppDispatch} from "../../store/Store.ts";
+import {saveLog, updateLog} from "../../slices/LogSlice.ts";
+import Img_convert from "../../services/image.converter.ts";
 
-function LogModal({closeModal,selectedLog} : {closeModal : ()=>void, selectedLog : LogModel | null}) {
-    const dispatch = useDispatch();
+function LogModal({closeModal,selectedLog} : {closeModal : ()=>void, selectedLog : LogModel| null}) {
+    const dispatch = useDispatch<AppDispatch>();
 
     const [fieldIds,setFieldIds] = useState<string[]>(['Select Field Id'])
     const [staffIds,setStaffIds] = useState<string[]>(['Select Staff Id'])
@@ -20,7 +22,7 @@ function LogModal({closeModal,selectedLog} : {closeModal : ()=>void, selectedLog
 
     const [logType,setLogType] = useState<string>('')
     const [logDescription,setLogDescription] = useState<string>('')
-    const [log_image,set_log_image] = useState<string | null>(null);
+    const [log_image,set_log_image] = useState<File| null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,16 +31,16 @@ function LogModal({closeModal,selectedLog} : {closeModal : ()=>void, selectedLog
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64String = reader.result as string;
-                set_log_image(base64String);
+                set_log_image(file);
                 setPreviewImage(base64String)
             };
 
             reader.readAsDataURL(file);
         }
     };
-    function settingPreviewImage(img:string | null){
-        setPreviewImage(img)
-    }
+    // function settingPreviewImage(img:string | null){
+    //     setPreviewImage(img)
+    // }
     const addFieldDropdown = ()=>{
         setAdditionalFields([...additionalFields,'']);
     }
@@ -93,11 +95,17 @@ function LogModal({closeModal,selectedLog} : {closeModal : ()=>void, selectedLog
             setButtonText('Update Log')
             set_log_image(selectedLog.observe_image)
             setLogType(selectedLog.log_type)
-            setLogDescription(selectedLog.log_description)
-            setAdditionalStaffs(selectedLog.staff_list)
-            setAdditionalCrops(selectedLog.crop_list)
-            setAdditionalFields(selectedLog.fields_list)
-            settingPreviewImage(selectedLog.observe_image)
+            setLogDescription(selectedLog.log_details)
+
+            if (selectedLog.log_fiedls_details != undefined){
+                setAdditionalFields(selectedLog.log_fiedls_details)
+            }
+            if (selectedLog.log_crop_details != undefined){
+                setAdditionalCrops(selectedLog.log_crop_details)
+            }
+            if (selectedLog.log_staff_details != undefined){
+                setAdditionalStaffs(selectedLog.log_staff_details)
+            }
         }
     }, []);
 
@@ -107,12 +115,14 @@ function LogModal({closeModal,selectedLog} : {closeModal : ()=>void, selectedLog
         }
     };
 
-    function onSubmitClick(){
+    async function onSubmitClick(){
         let date :string = String(Date.now());
         const log = new LogModel('1',date,logDescription,logType,log_image,additionalFields,additionalCrops,additionalStaffs);
 
         if (selectedLog){
-            log.setLogId(selectedLog.log_id)
+            // @ts-ignore
+            log.observe_image = await Img_convert.base64ToFile(log.observe_image as string)
+            log.setLogId(selectedLog.log_code)
             Swal.fire({
                 title: "Do you want to Update the changes?",
                 showDenyButton: true,
@@ -121,14 +131,14 @@ function LogModal({closeModal,selectedLog} : {closeModal : ()=>void, selectedLog
                 denyButtonText: `Don't save`
             }).then((result) => {
                 if (result.isConfirmed) {
-                    dispatch(updateLog(log.toPlainObject()))
+                    dispatch(updateLog(log));
                     Swal.fire("Saved!", "", "success");
                 } else if (result.isDenied) {
                     Swal.fire("Changes are not saved", "", "info");
                 }
             });
         }else {
-            dispatch(addLog(log.toPlainObject()));
+            dispatch(saveLog(log))
             Swal.fire({
                 title: "Saved!",
                 icon: "success",
@@ -225,7 +235,7 @@ function LogModal({closeModal,selectedLog} : {closeModal : ()=>void, selectedLog
                                     >
                                         <option>Select Field Id</option>
                                     </select>
-                                    {additionalFields.map((_, index) => (
+                                    {additionalFields != undefined && additionalFields.map((_, index) => (
                                         <>
                                             <div key={index} className={'flex'}>
                                                 <div className={'w-[200px]'}>
@@ -277,7 +287,7 @@ function LogModal({closeModal,selectedLog} : {closeModal : ()=>void, selectedLog
                                     >
                                         <option>Select Crop Id</option>
                                     </select>
-                                    {additionalCrops.map((_, index) => (
+                                    {additionalCrops != undefined && additionalCrops.map((_, index) => (
                                         <>
                                             <div key={index} className={'flex'}>
                                                 <div className={'w-[200px]'}>
@@ -331,7 +341,7 @@ function LogModal({closeModal,selectedLog} : {closeModal : ()=>void, selectedLog
                                     >
                                         <option>Select Staff Id</option>
                                     </select>
-                                    {additionalStaffs.map((_, index) => (
+                                    {additionalStaffs != undefined && additionalStaffs.map((_, index) => (
                                         <>
                                             <div key={index} className={'flex'}>
                                                 <div className={'w-[200px]'}>
