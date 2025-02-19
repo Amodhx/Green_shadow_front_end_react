@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
 import VehicleModel from "../../model/VehicleModel.ts";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Swal from 'sweetalert2'
 import ModalButton from "../ModalButton.tsx";
 import {saveVehicle, updateVehicle} from "../../slices/VehicleSlice.ts";
 import {AppDispatch} from "../../store/Store.ts";
+import StaffModel from "../../model/StaffModel.ts";
 
 function Vehicle({
                      closeModal,
@@ -15,7 +16,7 @@ function Vehicle({
 }) {
     const [fuelTypes] = useState(['Select Vehicle Fuel Type','PETROL', 'DIESEL']);
     const [vehicleStatuses] = useState(['Select Vehicle Status','AVAILABLE', 'OUT_OF_SERVICE']);
-    const [staffIdToSelectOwner] = useState(['Select Staff Id'])
+    const [staffIdToSelectOwner,setStaffIdToSelectOwner] = useState<string[]>(['Select Staff Id'])
 
     const [licence_plate_number,set_licence_plate_number] = useState('')
     const [vehicle_category,set_vehicle_category] = useState('')
@@ -26,8 +27,10 @@ function Vehicle({
     const [buttonText,setButtonText] = useState('Save Vehicle')
 
     const dispatch = useDispatch<AppDispatch>();
-
+    const staffs :StaffModel[] = useSelector((state : any) => state.staffs);
     useEffect(() => {
+        let staffIdsLise = staffs.map((staff)=>staff.staff_id);
+        setStaffIdToSelectOwner([...staffIdToSelectOwner,...staffIdsLise])
         if (selectedVehicle) {
             setButtonText('Update Vehicle')
             set_licence_plate_number(selectedVehicle.licence_plate_number || '');
