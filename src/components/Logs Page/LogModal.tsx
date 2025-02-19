@@ -1,11 +1,14 @@
 import LogModel from "../../model/LogModel.ts";
 import React, {useEffect, useState} from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import ModalButton from "../ModalButton.tsx";
 import Swal from "sweetalert2";
 import {AppDispatch} from "../../store/Store.ts";
 import {saveLog, updateLog} from "../../slices/LogSlice.ts";
 import Img_convert from "../../services/image.converter.ts";
+import StaffModel from "../../model/StaffModel.ts";
+import CropModel from "../../model/CropModel.ts";
+import FieldModel from "../../model/FieldModel.ts";
 
 function LogModal({closeModal,selectedLog} : {closeModal : ()=>void, selectedLog : LogModel| null}) {
     const dispatch = useDispatch<AppDispatch>();
@@ -87,10 +90,17 @@ function LogModal({closeModal,selectedLog} : {closeModal : ()=>void, selectedLog
 
     const [logTypes] = useState(['Select Log Type' , 'DANGER','NORMAL'])
 
+    const staffs :StaffModel[] = useSelector((state : any) => state.staffs);
+    const crops :CropModel[] = useSelector((state : any)=> state.crops);
+    const fields: FieldModel[] = useSelector((state: any) => state.fields);
     useEffect(() => {
-        setFieldIds([...fieldIds,'F001','F002'])
-        setStaffIds([...staffIds,'S001','S002'])
-        setCropIds([...cropIds,'C001','C002'])
+        let fieldIdsList = fields.map((field) => field.field_code);
+        let staffIdsLise = staffs.map((staff)=>staff.staff_id);
+        let cropIdsList = crops.map((crop)=> crop.crop_code);
+
+        setFieldIds([...fieldIds,...fieldIdsList])
+        setStaffIds([...staffIds,...staffIdsLise])
+        setCropIds([...cropIds,...cropIdsList])
         if (selectedLog){
             setButtonText('Update Log')
             set_log_image(selectedLog.observe_image)

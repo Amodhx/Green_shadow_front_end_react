@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from "react";
 import EquipmentModel from "../../model/EquipmentModel.ts";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Swal from "sweetalert2";
 import ModalButton from "../ModalButton.tsx";
 import {AppDispatch} from "../../store/Store.ts";
 import {saveEquipment, updateEquipment} from "../../slices/EquipmentSlice.ts";
+import FieldModel from "../../model/FieldModel.ts";
+import StaffModel from "../../model/StaffModel.ts";
 
 function EquipmentModal({
                             closeModal,
@@ -26,9 +28,13 @@ function EquipmentModal({
             closeModal();
         }
     };
+    const fields: FieldModel[] = useSelector((state: any) => state.fields);
+    const staffs :StaffModel[] = useSelector((state : any) => state.staffs);
     useEffect(() => {
-        setStaffIds([...staffIds,'S001','S002'])
-        setFieldIds([...fieldIds,'F001','F002'])
+        let fieldIdsList = fields.map((field) => field.field_code);
+        let staffIdsLise = staffs.map((staff)=>staff.staff_id);
+        setStaffIds([...staffIds,...staffIdsLise])
+        setFieldIds([...fieldIds,...fieldIdsList])
         if (selectedEquipment) {
             setButtonText('Update Equipment')
             set_equipment_name(selectedEquipment.equipment_name)

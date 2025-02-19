@@ -1,11 +1,14 @@
 import FieldModel from "../../model/FieldModel.ts";
 import React, {useEffect, useState} from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Swal from "sweetalert2";
 import ModalButton from "../ModalButton.tsx";
 import {saveField, updateField} from "../../slices/FieldSlice.ts";
 import {AppDispatch} from "../../store/Store.ts";
 import Img_convert from "../../services/image.converter.ts";
+import StaffModel from "../../model/StaffModel.ts";
+import CropModel from "../../model/CropModel.ts";
+import EquipmentModel from "../../model/EquipmentModel.ts";
 
 function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedField : FieldModel | null}) {
     const [cropIds,setCropIds] = useState<string[]>(['Select Crop Id']);
@@ -82,10 +85,17 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
         setAdditionalEquipments(updatedEquipment)
     }
 
+    const staffs :StaffModel[] = useSelector((state : any) => state.staffs);
+    const crops :CropModel[] = useSelector((state : any)=> state.crops);
+    const equipments : EquipmentModel[] = useSelector((state : any)=> state.equipments);
     useEffect(() => {
-        setCropIds([...cropIds,'C001','C002'])
-        setStaffIds([...staffIds,'S001','S002'])
-        setEquipmentIds([...equipmentIds,'E001','E002'])
+        let staffIdsLise = staffs.map((staff)=>staff.staff_id);
+        let cropIdsList = crops.map((crop)=> crop.crop_code);
+        let equipmentIdsList = equipments.map((equipment)=>equipment.equipment_id);
+
+        setCropIds([...cropIds,...cropIdsList])
+        setStaffIds([...staffIds,...staffIdsLise])
+        setEquipmentIds([...equipmentIds,...equipmentIdsList])
         if (selectedField){
             setButtonText('Update Field')
             setField_name(selectedField.field_name)

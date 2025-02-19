@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from "react";
 import ModalButton from "../ModalButton.tsx";
 import StaffModel from "../../model/StaffModel.ts";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import Swal from "sweetalert2";
 import {saveStaff, updateStaff} from "../../slices/StaffSlice.ts";
 import {AppDispatch} from "../../store/Store.ts";
+import FieldModel from "../../model/FieldModel.ts";
+import EquipmentModel from "../../model/EquipmentModel.ts";
+import VehicleModel from "../../model/VehicleModel.ts";
 
 function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selectedStaff?:StaffModel | null}) {
     const handleOutsideClick = (e: React.MouseEvent) => {
@@ -13,10 +16,17 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
         }
     };
     const  dispatch = useDispatch<AppDispatch>();
+    const fields: FieldModel[] = useSelector((state: any) => state.fields);
+    const equipments : EquipmentModel[] = useSelector((state : any)=> state.equipments);
+    const vehicles:VehicleModel[] = useSelector((state:any)=>state.vehicles);
+
     useEffect(() => {
-        setFieldIds([...fieldIds,'F001','F002'])
-        setEquipmentIds([...equipmentIds,'E001','E002'])
-        setVehicleIds([...vehicleIds,'V001','V002'])
+        let fieldIdsList = fields.map((field) => field.field_code);
+        let equipmentIdsList = equipments.map((equipment)=>equipment.equipment_id);
+        let vehicleIdsList = vehicles.map((vehicle)=>vehicle.vehicle_code);
+        setFieldIds([...fieldIds,...fieldIdsList])
+        setEquipmentIds([...equipmentIds,...equipmentIdsList])
+        setVehicleIds([...vehicleIds,...vehicleIdsList])
         if (selectedStaff){
             setButtonText("Update Staff")
             set_first_name(selectedStaff.first_name)
