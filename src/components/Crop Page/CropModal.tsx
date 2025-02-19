@@ -1,11 +1,12 @@
 import ModalButton from "../ModalButton.tsx";
 import React, {useEffect, useState} from "react";
 import CropModel from "../../model/CropModel.ts";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {saveCrop, updateCrop} from "../../slices/CropSlice.ts";
 import Swal from "sweetalert2";
 import {AppDispatch} from "../../store/Store.ts";
 import Img_convert from "../../services/image.converter.ts";
+import FieldModel from "../../model/FieldModel.ts";
 
 function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCrop:CropModel | null}) {
     const [fieldIds,setFieldIds] = useState<string[]>(['Select Field Id'])
@@ -58,8 +59,10 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
         updatedField[index] = e.target.value;
         setAdditionalFields(updatedField)
     }
+    const fields: FieldModel[] = useSelector((state: any) => state.fields);
     useEffect(() => {
-        setFieldIds([...fieldIds,'F001','F002'])
+        let fieldIdsList = fields.map((field) => field.field_code);
+        setFieldIds([...fieldIds, ...fieldIdsList]);
         if (selectedCrop){
             setButtonText('Update Crop')
             set_crop_common_name(selectedCrop.crop_common_name)
@@ -67,8 +70,8 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
             set_crop_image(selectedCrop.crop_image)
             set_category(selectedCrop.category)
             set_season(selectedCrop.season)
-            if (selectedCrop.field_list != undefined) {
-                setAdditionalFields(selectedCrop.field_list)
+            if (selectedCrop.crop_field_details != undefined) {
+                setAdditionalFields(selectedCrop.crop_field_details)
             }
             // settingPreviewImage(selectedCrop.crop_image)
         }
@@ -233,25 +236,23 @@ function CropModal({closeModal,selectedCrop}: {closeModal: () => void,selectedCr
                                                         onChange={(e) => {
                                                             setSelectedFieldId(index, e)
                                                         }}
-                                                        key={index}
                                                         className="mt-2 mb-2 form-control p-2 rounded-md w-full text-gray-500"
                                                     >
-                                                        {fieldIds.map((e) => (
-                                                            <option key={e} value={e}>{e}</option>
+                                                        {fieldIds.map((e, idx) => (
+                                                            <option key={idx} value={e}>{e}</option>
                                                         ))}
                                                     </select>
                                                 </div>
                                                 <div>
                                                     <button
-                                                        key={index}
                                                         onClick={(e) => {
                                                             removeFieldIdSelector(index, e)
                                                         }}
-                                                        className={'mt-2 ml-4 h-[40px] w-[70px] bg-green-500 text-white rounded-md hover:bg-red-500'}>Remove
+                                                        className={'mt-2 ml-4 h-[40px] w-[70px] bg-green-500 text-white rounded-md hover:bg-red-500'}
+                                                    >
+                                                        Remove
                                                     </button>
                                                 </div>
-
-
                                             </div>
                                         </>
                                     ))}

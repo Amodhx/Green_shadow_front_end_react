@@ -92,9 +92,9 @@ function FieldModal({closeModal,selectedField} : {closeModal: ()=>void,selectedF
             setField_location(selectedField.field_location)
             setExtent_size(selectedField.extent_size)
             set_field_image(selectedField.field_image)
-            setAdditionalEquipments(selectedField.equipment_list)
-            setAdditionalCrops(selectedField.crops_list)
-            setAdditionalStaffs(selectedField.staff_list)
+            setAdditionalEquipments(selectedField.equipment_field_details)
+            setAdditionalCrops(selectedField.crop_field_details)
+            setAdditionalStaffs(selectedField.field_staff_details)
             // settingPreviewImage(selectedField.field_image)
         }
     }, []);

@@ -59,13 +59,13 @@ function FieldCard({field} : {field: FieldModel}){
                             <strong>Extent Size:</strong> {field.extent_size}
                         </p>
                         <p className="text-sm mb-2">
-                            <strong>Staffs :</strong> {field.staff_list}
+                            <strong>Staffs :</strong> {field.field_staff_details}
                         </p>
                         <p className="text-sm mb-2">
-                            <strong>Crops :</strong> {field.crops_list}
+                            <strong>Crops :</strong> {field.crop_field_details}
                         </p>
                         <p className="text-sm mb-2">
-                            <strong>Equipments :</strong> {field.equipment_list}
+                            <strong>Equipments :</strong> {field.equipment_field_details}
                         </p>
                         <CardButtons onUpdateCropClick={onUpdateClick} onDeleteCropClick={onDeleteClick}/>
                     </div>

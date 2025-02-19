@@ -4,8 +4,8 @@ class EquipmentModel{
     type:string
     count:string
     status:string
-    staff_list:string[]
-    field_list:string[]
+    equipment_staff_details:string[]
+    equipment_field_details:string[]
 
 
     setEquipmentId(id:string){
@@ -17,19 +17,8 @@ class EquipmentModel{
         this.type = type;
         this.count = count;
         this.status = status;
-        this.staff_list = staff_list;
-        this.field_list = field_list;
-    }
-    toPlainObject() {
-        return {
-            equipment_id: this.equipment_id,
-            equipment_name: this.equipment_name,
-            type: this.type,
-            count: this.count,
-            status: this.status,
-            staff_list: this.staff_list,
-            field_list: this.field_list,
-        };
+        this.equipment_staff_details = staff_list;
+        this.equipment_field_details = field_list;
     }
 
 

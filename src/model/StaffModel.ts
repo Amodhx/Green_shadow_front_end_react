@@ -43,28 +43,6 @@ class StaffModel{
         this.equipment_staff_details = equipment_list;
         this.vehicle = vehicle_list;
     }
-    toPlainObject() {
-        return {
-            staff_id: this.staff_id,
-            first_name: this.first_name,
-            last_name: this.last_name,
-            designation: this.designation,
-            gender: this.gender,
-            joined_date: this.joined_date,
-            dob: this.dob,
-            address_line_01 : this.address_line_01,
-            address_line_02 : this.address_line_02,
-            address_line_03 : this.address_line_03,
-            address_line_04 : this.address_line_04,
-            address_line_05 : this.address_line_05,
-            contact_number: this.contact_number,
-            email: this.email,
-            role: this.role,
-            field_list: this.field_staff_details,
-            equipment_list: this.equipment_staff_details,
-            vehicle_list: this.vehicle,
-        }
-    }
 }
 
 export default StaffModel

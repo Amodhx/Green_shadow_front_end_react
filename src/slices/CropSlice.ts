@@ -36,7 +36,7 @@ export const updateCrop = createAsyncThunk(
             formData.append("crop_scientific_name", crop.crop_scientific_name);
             formData.append("category", crop.category);
             formData.append("season", crop.season);
-            formData.append("field_code_list", crop.field_list.join(",")); // Convert array to comma-separated string
+            formData.append("field_code_list", crop.crop_field_details.join(",")); // Convert array to comma-separated string
             if (crop.crop_image){
                 formData.append("crop_image", crop.crop_image);
             }
@@ -59,7 +59,7 @@ export const saveCrop = createAsyncThunk(
             formData.append("crop_scientific_name", crop.crop_scientific_name);
             formData.append("category", crop.category);
             formData.append("season", crop.season);
-            formData.append("field_code_list", crop.field_list.join(","));
+            formData.append("field_code_list", crop.crop_field_details.join(","));
             if (crop.crop_image){
                 formData.append("crop_image", crop.crop_image);
             }

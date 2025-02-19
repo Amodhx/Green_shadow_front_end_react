@@ -15,11 +15,6 @@ function EquipmentModal({
 }){
     const dispatch = useDispatch<AppDispatch>();
 
-    useEffect(() => {
-        setStaffIds([...staffIds,'S001','S002'])
-        setFieldIds([...fieldIds,'F001','F002'])
-    }, []);
-
     const [buttonText,setButtonText] = useState('Save Equipment')
     const [equipmentTypes] = useState(['Select Equipment Type','ELECTRONIC',"MECHANICAL"])
     const [equipmentStatus] = useState(['Select Equipment Status','AVAILABLE',"NOT AVAILABLE"])
@@ -32,17 +27,19 @@ function EquipmentModal({
         }
     };
     useEffect(() => {
+        setStaffIds([...staffIds,'S001','S002'])
+        setFieldIds([...fieldIds,'F001','F002'])
         if (selectedEquipment) {
             setButtonText('Update Equipment')
             set_equipment_name(selectedEquipment.equipment_name)
             set_equipment_type(selectedEquipment.type)
             set_equipment_status(selectedEquipment.status)
             set_equipment_count(selectedEquipment.count)
-            if (selectedEquipment.staff_list != undefined){
-                setAdditionalStaff(selectedEquipment.staff_list)
+            if (selectedEquipment.equipment_staff_details != undefined){
+                setAdditionalStaff(selectedEquipment.equipment_staff_details)
             }
-            if (selectedEquipment.field_list != undefined){
-                setAdditionalFields(selectedEquipment.field_list)
+            if (selectedEquipment.equipment_field_details != undefined){
+                setAdditionalFields(selectedEquipment.equipment_field_details)
             }
 
         }
@@ -230,7 +227,7 @@ function EquipmentModal({
                                                 <div key={index} className={'flex'}>
                                                     <div className={'w-[200px]'}>
                                                         <select
-                                                            value={selectedEquipment?.staff_list[index]}
+                                                            value={selectedEquipment?.equipment_staff_details[index]}
                                                             onChange={(e) => {
                                                                 setSelectedStaffId(index, e)
                                                             }}
@@ -282,7 +279,7 @@ function EquipmentModal({
                                                 <div key={index} className={'flex'}>
                                                     <div className={'w-[200px]'}>
                                                         <select
-                                                            value={selectedEquipment?.field_list[index]}
+                                                            value={selectedEquipment?.equipment_field_details[index]}
                                                             onChange={(e) => {
                                                                 setSelectedFieldId(index, e)
                                                             }}

@@ -1,11 +1,28 @@
 import Cards from "../components/Dashboard/Cards.tsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Chart from "../components/Dashboard/Chart.tsx";
+import {useDispatch} from "react-redux";
+import {AppDispatch} from "../store/Store.ts";
+import {getFields} from "../slices/FieldSlice.ts";
+import {getStaff} from "../slices/StaffSlice.ts";
+import {getEquipments} from "../slices/EquipmentSlice.ts";
+import {getLogs} from "../slices/LogSlice.ts";
+import {getVehicles} from "../slices/VehicleSlice.ts";
+import {getCrops} from "../slices/CropSlice.ts";
 
 function Dashboard(){
     const [incomeData] = useState<number[]>(
         Array.from({ length: 12 }, () => Math.floor(Math.random() * 20) + 5) // Dummy data
     );
+    const dispatch = useDispatch<AppDispatch>()
+    useEffect(() => {
+        dispatch(getFields());
+        dispatch(getStaff());
+        dispatch(getEquipments());
+        dispatch(getVehicles());
+        dispatch(getCrops());
+        dispatch(getLogs());
+    });
     return(
         <>
             <Cards/>

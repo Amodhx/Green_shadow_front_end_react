@@ -5,8 +5,8 @@ class CropModel {
     crop_image:File | null;
     category:string
     season:string
-    field_list:string[]
-    log_list:string[]
+    crop_field_details:string[]
+    log_crop_details:string[]
 
     setCropId(id:string):void{
         this.crop_code = id;
@@ -20,20 +20,8 @@ class CropModel {
         this.crop_image = crop_image;
         this.category = category;
         this.season = season;
-        this.field_list = field_list;
-        this.log_list = log_list;
-    }
-    toPlainObject() {
-        return {
-            crop_code : this.crop_code,
-            crop_common_name: this.crop_common_name,
-            crop_scientific_name: this.crop_scientific_name,
-            crop_image: this.crop_image,
-            category: this.category,
-            season: this.season,
-            field_list: this.field_list,
-            log_list: this.log_list
-        }
+        this.crop_field_details = field_list;
+        this.log_crop_details = log_list;
     }
 }
 export default CropModel;

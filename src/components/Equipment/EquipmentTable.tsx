@@ -74,8 +74,8 @@ function EquipmentTable(){
                             <td className="p-2">{equipment.type}</td>
                             <td className="p-2">{equipment.count}</td>
                             <td className="p-2">{equipment.status}</td>
-                            <td className="p-2">{equipment.staff_list}</td>
-                            <td className="p-2">{equipment.field_list}</td>
+                            <td className="p-2">{equipment.equipment_staff_details}</td>
+                            <td className="p-2">{equipment.equipment_field_details}</td>
                             <td className="p-2">
                                 <button
                                     onClick={() =>{

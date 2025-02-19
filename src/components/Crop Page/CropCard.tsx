@@ -14,7 +14,7 @@ function CropCard({crop}: {crop: CropModel}) {
             crop.crop_image,
             crop.category,
             crop.season,
-            crop.field_list,
+            crop.crop_field_details,
             []);
         setSelectedCrop(cropDataToUpdate);
     }
@@ -66,7 +66,7 @@ function CropCard({crop}: {crop: CropModel}) {
                             <strong>Crop Season:</strong> {crop.season}
                         </p>
                         <p className="text-sm mb-2">
-                            <strong>Field ID:</strong> {crop.field_list}
+                            <strong>Field ID:</strong> {crop.crop_field_details}
                         </p>
                         <CardButtons onUpdateCropClick={onUpdateClick} onDeleteCropClick={onDeleteClick}/>
                     </div>

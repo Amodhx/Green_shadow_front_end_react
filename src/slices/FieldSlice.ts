@@ -13,12 +13,12 @@ export const saveField = createAsyncThunk(
             formData.append("field_name",field.field_name)
             formData.append("field_location",field.field_location)
             formData.append("extent_size",field.extent_size)
-            formData.append("staff_list",field.staff_list.join(","))
-            formData.append("crop_list",field.crops_list.join(","))
+            formData.append("staff_list",field.field_staff_details.join(","))
+            formData.append("crop_list",field.crop_field_details.join(","))
             if (field.field_image){
                 formData.append("field_image",field.field_image);
             }
-            formData.append("equipments_list",field.equipment_list.join(","))
+            formData.append("equipments_list",field.equipment_field_details.join(","))
 
             const response:any = await Api_call.postApiCallWithFromData('/field/saveField',formData)
             return response.data;
@@ -42,18 +42,18 @@ export const updateField = createAsyncThunk(
             if (field.field_image){
                 formData.append("field_image",field.field_image);
             }
-            if (field.staff_list != undefined){
-                formData.append("staff_list",field.staff_list.join(","))
+            if (field.field_staff_details != undefined){
+                formData.append("staff_list",field.field_staff_details.join(","))
             }else {
                 formData.append("staff_list","")
             }
-            if (field.crops_list != undefined){
-                formData.append("crop_list",field.crops_list.join(","))
+            if (field.crop_field_details != undefined){
+                formData.append("crop_list",field.crop_field_details.join(","))
             }else {
                 formData.append("crop_list","")
             }
-            if (field.equipment_list != undefined){
-                formData.append("equipments_list",field.equipment_list.join(","))
+            if (field.equipment_field_details != undefined){
+                formData.append("equipments_list",field.equipment_field_details.join(","))
             }else {
                 formData.append("equipments_list","")
             }
