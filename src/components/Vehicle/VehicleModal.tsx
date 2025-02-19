@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
 import VehicleModel from "../../model/VehicleModel.ts";
 import {useDispatch} from "react-redux";
-import {addVehicle,updateVehicle} from "../../slices/VehicleSlice.ts";
 import Swal from 'sweetalert2'
 import ModalButton from "../ModalButton.tsx";
+import {saveVehicle, updateVehicle} from "../../slices/VehicleSlice.ts";
+import {AppDispatch} from "../../store/Store.ts";
 
 function Vehicle({
                      closeModal,
@@ -24,7 +25,7 @@ function Vehicle({
     const [remarks,set_remarks] = useState('')
     const [buttonText,setButtonText] = useState('Save Vehicle')
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
         if (selectedVehicle) {
@@ -41,7 +42,7 @@ function Vehicle({
     function submitBtnClick(){
         const vehicle_modal = new VehicleModel('1', licence_plate_number, vehicle_category, vehicle_fuel_type, vehicle_status, staff_id, remarks)
         if (selectedVehicle){
-            vehicle_modal.setVehicleId(selectedVehicle.vehicle_id);
+            vehicle_modal.setVehicleId(selectedVehicle.vehicle_code);
             Swal.fire({
                 title: "Do you want to Update the changes?",
                 showDenyButton: true,
@@ -50,14 +51,14 @@ function Vehicle({
                 denyButtonText: `Don't save`
             }).then((result) => {
                 if (result.isConfirmed) {
-                    dispatch(updateVehicle(vehicle_modal.toPlainObject()));
+                    dispatch(updateVehicle(vehicle_modal))
                     Swal.fire("Saved!", "", "success");
                 } else if (result.isDenied) {
                     Swal.fire("Changes are not saved", "", "info");
                 }
             });
         }else {
-            dispatch(addVehicle(vehicle_modal.toPlainObject()));
+            dispatch(saveVehicle(vehicle_modal))
             Swal.fire({
                 title: "Saved!",
                 icon: "success",

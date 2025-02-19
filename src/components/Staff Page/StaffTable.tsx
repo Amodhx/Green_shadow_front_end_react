@@ -1,14 +1,20 @@
 import '../../css/Table.css'
 import StaffModel from "../../model/StaffModel.ts";
 import {useDispatch, useSelector} from "react-redux";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import StaffModal from "./StaffModal.tsx";
 import Swal from "sweetalert2";
-import {deleteStaff} from "../../slices/StaffSlice.ts";
+import {deleteStaff, getStaff} from "../../slices/StaffSlice.ts";
+import {AppDispatch} from "../../store/Store.ts";
 function StaffTable(){
+    useEffect(() => {
+        if (staffs.length ===0){
+            dispatch(getStaff())
+        }
+    }, []);
     const staffs : StaffModel[] = useSelector((state : any) => state.staffs);
     const [selectedStaff, setSelectedStaff] = useState<StaffModel | null>(null)
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     function onEditBtnClick(staffId:string){
         const staff = staffs.find((staff:StaffModel) => staff.staff_id === staffId);
@@ -29,7 +35,7 @@ function StaffTable(){
                 confirmButtonText: "Yes, delete it!"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    dispatch(deleteStaff(staff));
+                    dispatch(deleteStaff(staff))
                     Swal.fire({
                         title: "Deleted!",
                         text: "Your file has been deleted.",
@@ -44,7 +50,7 @@ function StaffTable(){
     }
     return(
         <>
-            <div className="table-container container mx-auto p-4 rounded-lg overflow-hidden">
+            <div className="table-container container mx-auto p-4 rounded-lg overflow-x-auto">
                 <table className="min-w-full border-collapse overflow-auto">
                     <thead>
                     <tr className="bg-green-500 text-white text-left rounded-t-lg">
@@ -80,9 +86,9 @@ function StaffTable(){
                             <td className="p-2">{staff.contact_number}</td>
                             <td className="p-2">{staff.email}</td>
                             <td className="p-2">{staff.role}</td>
-                            <td className="p-2">{staff.field_list}</td>
-                            <td className="p-2">{staff.equipment_list}</td>
-                            <td className="p-2">{staff.vehicle_list}</td>
+                            <td className="p-2">{staff.field_staff_details}</td>
+                            <td className="p-2">{staff.equipment_staff_details}</td>
+                            <td className="p-2">{staff.vehicle}</td>
                             <td className="p-2">
                                 <button
                                     onClick={() =>{

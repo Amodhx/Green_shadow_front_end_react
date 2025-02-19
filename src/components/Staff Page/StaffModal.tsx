@@ -2,16 +2,17 @@ import React, {useEffect, useState} from "react";
 import ModalButton from "../ModalButton.tsx";
 import StaffModel from "../../model/StaffModel.ts";
 import {useDispatch} from "react-redux";
-import {addStaff, updateStaff} from "../../slices/StaffSlice.ts";
 import Swal from "sweetalert2";
+import {saveStaff, updateStaff} from "../../slices/StaffSlice.ts";
+import {AppDispatch} from "../../store/Store.ts";
 
-function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selectedStaff:StaffModel}) {
+function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selectedStaff?:StaffModel | null}) {
     const handleOutsideClick = (e: React.MouseEvent) => {
         if (e.target === e.currentTarget) {
             closeModal();
         }
     };
-    const  dispatch = useDispatch();
+    const  dispatch = useDispatch<AppDispatch>();
     useEffect(() => {
         setFieldIds([...fieldIds,'F001','F002'])
         setEquipmentIds([...equipmentIds,'E001','E002'])
@@ -32,9 +33,18 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
             set_contact(selectedStaff.contact_number)
             set_email(selectedStaff.email)
             set_role(selectedStaff.role)
-            setAdditionalFields(selectedStaff.field_list)
-            setAdditionalVehicles(selectedStaff.vehicle_list)
-            setAdditionalEquipments(selectedStaff.equipment_list)
+            if (selectedStaff.field_staff_details != undefined){
+                setAdditionalFields(selectedStaff.field_staff_details)
+            }
+            if (selectedStaff.vehicle != undefined){
+                setAdditionalVehicles(selectedStaff.vehicle)
+            }
+            if (selectedStaff.equipment_staff_details != undefined){
+                setAdditionalEquipments(selectedStaff.equipment_staff_details)
+            }
+
+
+
         }
     }, [selectedStaff]);
 
@@ -51,14 +61,14 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                 denyButtonText: `Don't save`
             }).then((result) => {
                 if (result.isConfirmed) {
-                    dispatch(updateStaff(staff.toPlainObject()))
+                    dispatch(updateStaff(staff))
                     Swal.fire("Saved!", "", "success");
                 } else if (result.isDenied) {
                     Swal.fire("Changes are not saved", "", "info");
                 }
             });
         }else {
-            dispatch(addStaff(staff.toPlainObject()))
+            dispatch(saveStaff(staff))
             Swal.fire({
                 title: "Saved!",
                 icon: "success",
@@ -364,12 +374,12 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                     >
                                         <option>Select Field Id</option>
                                     </select>
-                                    {additionalFields.map((_, index) => (
+                                    {additionalFields != undefined && additionalFields.map((_, index) => (
                                         <>
                                             <div key={index} className={'flex'}>
                                                 <div className={'w-[200px]'}>
                                                     <select
-                                                        value={selectedStaff?.field_list[index]}
+                                                        value={selectedStaff?.field_staff_details[index]}
                                                         onChange={(e) => {
                                                             setSelectedFieldId(index, e)
                                                         }}
@@ -416,12 +426,12 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                     >
                                         <option>Select Field Id</option>
                                     </select>
-                                    {additionalEquipments.map((_, index) => (
+                                    {additionalEquipments != undefined && additionalEquipments.map((_, index) => (
                                         <>
                                             <div key={index} className={'flex'}>
                                                 <div className={'w-[200px]'}>
                                                     <select
-                                                        value={selectedStaff?.equipment_list[index]}
+                                                        value={selectedStaff?.equipment_staff_details[index]}
                                                         onChange={(e) => {
                                                             setSelectedEquipmentId(index, e)
                                                         }}
@@ -471,12 +481,12 @@ function StaffModal({closeModal,selectedStaff}: {closeModal: () => void,selected
                                     >
                                         <option>Select Vehicle Id</option>
                                     </select>
-                                    {additionalVehicles.map((_, index) => (
+                                    {additionalVehicles != undefined && additionalVehicles.map((_, index) => (
                                         <>
                                             <div key={index} className={'flex'}>
                                                 <div className={'w-[200px]'}>
                                                     <select
-                                                        value={selectedStaff?.vehicle_list[index]}
+                                                        value={selectedStaff?.vehicle[index]}
                                                         onChange={(e) => {
                                                             setSelectedVehicleId(index, e)
                                                         }}

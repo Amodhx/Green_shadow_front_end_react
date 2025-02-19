@@ -14,9 +14,9 @@ class StaffModel{
     contact_number:string
     email:string
     role:string
-    field_list:string[]
-    equipment_list:string[]
-    vehicle_list:string[]
+    field_staff_details:string[]
+    equipment_staff_details:string[]
+    vehicle:string[]
 
     setStaffId(id:string){
         this.staff_id = id;
@@ -39,9 +39,9 @@ class StaffModel{
         this.contact_number = contact_number;
         this.email = email;
         this.role = role;
-        this.field_list = field_list;
-        this.equipment_list = equipment_list;
-        this.vehicle_list = vehicle_list;
+        this.field_staff_details = field_list;
+        this.equipment_staff_details = equipment_list;
+        this.vehicle = vehicle_list;
     }
     toPlainObject() {
         return {
@@ -60,9 +60,9 @@ class StaffModel{
             contact_number: this.contact_number,
             email: this.email,
             role: this.role,
-            field_list: this.field_list,
-            equipment_list: this.equipment_list,
-            vehicle_list: this.vehicle_list,
+            field_list: this.field_staff_details,
+            equipment_list: this.equipment_staff_details,
+            vehicle_list: this.vehicle,
         }
     }
 }

@@ -1,23 +1,29 @@
 import {useDispatch, useSelector} from "react-redux";
 import VehicleModel from "../../model/VehicleModel.ts";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import VehicleModal from "./VehicleModal.tsx";
-import {deleteVehicle} from "../../slices/VehicleSlice.ts";
+import {deleteVehicle, getVehicles} from "../../slices/VehicleSlice.ts";
 import Swal from 'sweetalert2';
+import {AppDispatch} from "../../store/Store.ts";
 
 
 function VehicleTable(){
-    const dispatch = useDispatch();
+    useEffect(() => {
+        if (vehicles.length ===0){
+            dispatch(getVehicles())
+        }
+    }, []);
+    const dispatch = useDispatch<AppDispatch>();
     const vehicles : VehicleModel[] = useSelector((state:any) => state.vehicles)
     const [selectedVehicle, setSelectedVehicle] = useState<VehicleModel | null>(null);
     function updateVehicleDetails(vehicleId:string){
-        const vehicle = vehicles.find((v: VehicleModel) => v.vehicle_id === vehicleId);
+        const vehicle = vehicles.find((v: VehicleModel) => v.vehicle_code === vehicleId);
         if (vehicle){
             setSelectedVehicle(vehicle)
         }
     }
     function deleteVehicleDetails(vehicle_id:string){
-        const vehicle = vehicles.find((v:VehicleModel) => v.vehicle_id === vehicle_id);
+        const vehicle = vehicles.find((v:VehicleModel) => v.vehicle_code === vehicle_id);
         if (vehicle){
             Swal.fire({
                 title: "Are you sure?",
@@ -61,8 +67,8 @@ function VehicleTable(){
                     </thead>
                     <tbody>
                     {vehicles.map((vehicle :VehicleModel) => (
-                        <tr key={vehicle.vehicle_id} className="hover:bg-green-100">
-                            <td className="p-2">{vehicle.vehicle_id}</td>
+                        <tr key={vehicle.vehicle_code} className="hover:bg-green-100">
+                            <td className="p-2">{vehicle.vehicle_code}</td>
                             <td className="p-2">{vehicle.licence_plate_number}</td>
                             <td className="p-2">{vehicle.vehicle_category}</td>
                             <td className="p-2">{vehicle.fuel_type}</td>
@@ -71,13 +77,13 @@ function VehicleTable(){
                             <td className="p-2">{vehicle.remarks}</td>
                             <td className="p-2">
                                 <button onClick={()=>{
-                                    updateVehicleDetails(vehicle.vehicle_id)
+                                    updateVehicleDetails(vehicle.vehicle_code)
                                 }} className="bg-blue-500 text-white px-2 py-1 hover:bg-blue-600 rounded">Edit</button>
                             </td>
                             <td className="p-2">
                                 <button
                                     onClick={()=>{
-                                        deleteVehicleDetails(vehicle.vehicle_id);
+                                        deleteVehicleDetails(vehicle.vehicle_code);
                                     }}
                                     className="bg-red-500 text-white px-2 py-1 hover:bg-red-600 rounded">Delete</button>
                             </td>
